@@ -1,2 +1,2 @@
-# poliappelli
-Script per riunire tutti le date degli appelli
+# Poliappelli
+Script per riunire tutte le date degli appelli
