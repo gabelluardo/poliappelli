@@ -1,6 +1,17 @@
 # Poliappelli
+
 Script per riunire tutte le date degli appelli
 
----
+* * *
 
-Fare riferimento al [parser](https://docs.python.org/3/library/html.parser.html) di python 3
+### Utili
+
+Fare riferimento a [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) per parsificare le table
+
+### TODO
+
+-   [ ] beautify output markdown
+-   [ ] import automatico su notable
+-   [ ] versione txt stampabile
+-   [ ] scriverlo meglio
+-   [ ] ordine di data/alfabetico
