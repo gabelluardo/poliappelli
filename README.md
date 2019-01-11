@@ -2,8 +2,6 @@
 
 Script per riunire tutte le date degli appelli
 
-* * *
-
 ### Utili
 
 Fare riferimento a [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) per parsificare le table
