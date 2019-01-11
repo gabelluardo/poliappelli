@@ -12,6 +12,5 @@ Fare riferimento a [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup
 
 -   [ ] beautify output markdown
 -   [ ] import automatico su notable
--   [ ] versione txt stampabile
--   [ ] scriverlo meglio
+-   [x] scriverlo meglio
 -   [ ] ordine di data/alfabetico
