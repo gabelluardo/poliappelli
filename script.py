@@ -1,8 +1,10 @@
-#!/usr/bin/python3
+#!./venv/bin/python3
 
-from bs4 import BeautifulSoup
-import urllib.request
 import sys
+from bs4 import BeautifulSoup
+from beautifultable import BeautifulTable
+from datetime import datetime as dt
+import urllib.request
 import os.path
 
 
@@ -16,8 +18,20 @@ class TABparser:
     def _openurl(self, url):
         return urllib.request.urlopen(url).read()
 
+    def _sort(self, key='Data'):
+        # TODO: aggiungere flag per l'ordinamento
+        if key is 'Data':
+            self.esami.sort(key=lambda materia: dt.strptime(
+                materia[2], "%d-%m-%Y %H:%M"))
+
     def parse(self, path, tag='table'):
-        target = self._openfile(path) if os.path.isfile(path) else self._openurl(path)
+        ## parsifica tutte le table che trova
+        ## nella pagina/file html e ne salva
+        ## i campi nella lista self.esami
+        ## ordinati per data dell'esame
+
+        target = self._openfile(path) if os.path.isfile(
+            path) else self._openurl(path)
 
         for table in BeautifulSoup(target, "lxml").find_all(tag):
             for tr in table.find_all('tr'):
@@ -25,26 +39,37 @@ class TABparser:
                 if row.__len__() > 0:
                     self.esami.append(row)
 
-    def output(self, filename='esami.md'):
-        file = open(filename, 'w')
-        file.write("## Esami\n\n"
-                   + "| Nome | Data | Tipo | Scadenza | Aula |\n"
-                   + "|------|------|------|----------|------|\n")
+        self._sort()
+
+    def output(self, filename='esami.md', terminal=False):
+        ## crea una tabella in sintassi markdonw
+        ## della lista self.esami che verra'
+        ## stampata su terminale oppure su file
+
+        table = BeautifulTable(
+            max_width=200, default_alignment=BeautifulTable.ALIGN_LEFT)
+        table.set_style(BeautifulTable.STYLE_MARKDOWN)
+        table.column_headers = ['Nome', 'Data', 'Tipo', 'Scadenza', 'Aula']
 
         for materia in self.esami:
-            file.write('|{}|{}|{}|{}|{}|\n'.format(
-                materia[1], materia[2], materia[4], materia[6], ''))
+            table.append_row([
+                materia[1], materia[2], materia[4], materia[6], ''])
+
+        if terminal:
+            print(table)
+        else:
+            file = open(filename, 'w')
+            file.write("## Esami\n\n")
+            file.write(str(table))
+            file.close()
 
 
 def main():
-
-    # url a scadenza
-    url='https://sid.studenti.polito.it/prenoesami/signin.do?event=verifySignin&id=173772749&tok=53616C7465645F5FA7FD14F2EA5FB01899AFCEDFFA45DAF7D4287F72BFE1B16FDB944AFCF5690216AA606CB9EB0561725B9E69D91C90E606C822AC29BD7051BD40717F1B5E4AA36963F178CEA502A92A'
+    # TODO: flag linea di comando
 
     hp = TABparser()
-    #hp.parse('test.html')
-    hp.parse(url)
-    hp.output()
+    hp.parse('test.html')
+    hp.output(terminal=False)
 
 
 if __name__ == '__main__':
