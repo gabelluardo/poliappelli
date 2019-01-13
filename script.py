@@ -42,10 +42,13 @@ def main():
 
     parser = argparse.ArgumentParser(
         description='Script le date degli appelli del PoliTo.')
-    parser.add_argument('-s', '--sort', dest='sorted', nargs='?', default='Data', const='Data', type=str,
-                        help='ordinamento delle materie (default: Data)', choices=['Nome', 'Data', 'Tipo', 'Scadenza'])
-    parser.add_argument('-o', '--output', nargs='?', dest='output', const='esami.md',
-                        type=str, help="scrive l'output su file (default: esami.md)")
+    parser.add_argument(
+        '-s', '--sort', dest='sorted', nargs='?', default='Data',
+        const='Data', type=str, help='ordinamento delle materie (default: Data)',
+        choices=['Nome', 'Data', 'Tipo', 'Scadenza'])
+    parser.add_argument(
+        '-o', '--output', nargs='?', dest='output', const='esami.md',
+        type=str, help="scrive l'output su file (default: esami.md)")
     args = parser.parse_args()
 
     # core dello script

@@ -2,6 +2,11 @@
 
 Script per ricordare tutte le date degli appelli del PoliTo
 
+### Build
+
+Per creare un singolo eseguibile nella cartella dist/  
+`pyinstaller --oneline script.py`
+
 ### Utili
 
 Fare riferimento a:
@@ -11,6 +16,7 @@ Fare riferimento a:
 -   [Getpass](https://alektos.blogspot.com/2011/06/inserire-password-con-python.html) per nascondere le password
 -   [BeautifulTable](https://beautifultable.readthedocs.io/en/latest/index.html) per l'output della tabella
 -   [Argparser](https://docs.python.org/3.6/library/argparse.html#module-argparse) per i flag da shell
+-   [PyInstaller](https://pyinstaller.readthedocs.io/en/stable/)
 
 ### TODO
 
