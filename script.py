@@ -3,8 +3,8 @@
 import sys
 import argparse
 import urllib.request
-import os.path
 import getpass
+
 from bs4 import BeautifulSoup
 from beautifultable import BeautifulTable
 from datetime import datetime as dt
@@ -28,14 +28,21 @@ class Scraper:
         return urllib.request.urlopen(url).read()
 
     def find_table(self):
+        # apre il browser Firefox per
+        # accedere alla pagina del polito
+        # e recuperare l'url termporaneo della
+        # pagina degli appelli
+
         url = str()
 
         # opzione per nascondere la finestra del browser
-        options = Options()
-        options.headless = True
+        opt = Options()
+        opt.headless = True
 
-        driver = webdriver.Firefox(options=None)
+        driver = webdriver.Firefox(options=opt)
         driver.get('https://idp.polito.it/idp/x509mixed-login')
+
+        # TODO: caso di credenziali sbagliate
 
         # login al portale della didattica
         userElement = driver.find_element_by_id('j_username')
@@ -43,24 +50,30 @@ class Scraper:
         userElement.send_keys(self.user)
         passElement.send_keys(self.passwd)
         userElement.submit()
-        passElement.submit()
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, 'Portale della Didattica')))
 
+        # TODO: chiudere i popup
+
+        # TODO: caso di credenziali sbagliate
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located(
+            (By.LINK_TEXT, 'Portale della Didattica')))
         driver.find_element_by_link_text('Portale della Didattica').click()
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, 'Consultazione e prenotazione esami')))
+
+        # TODO: pagina non caricata
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located(
+            (By.LINK_TEXT, 'Consultazione e prenotazione esami')))
         driver.find_element_by_link_text(
             'Consultazione e prenotazione esami').click()
 
+        # TODO: aggiungere opzione casella 10 mesi
 
+        # TODO: pagina non caricata
         WebDriverWait(driver, 10).until(EC.title_is('Prenotazione Esami'))
         url = driver.current_url
-        print(url)
-
         driver.close()
 
         return url
 
-    def tab_parse(self, path=None, tag='table'):
+    def parse_table(self, path=None, tag='table'):
         # parsifica tutte le table che trova
         # nella pagina/file html e ne salva
         # i campi nella lista self.esami
@@ -77,28 +90,6 @@ class Scraper:
         return self.esami
 
 
-def main():
-    # inizializzazione degli argomenti
-    # che posso essere passati da shell
-
-    parser = argparse.ArgumentParser(
-        description='Script le date degli appelli del PoliTo.')
-    parser.add_argument(
-        '-s', '--sort', dest='sorted', nargs='?', default='Data',
-        const='Data', type=str, help='ordinamento delle materie (default: Data)',
-        choices=['Nome', 'Data', 'Tipo', 'Scadenza'])
-    parser.add_argument(
-        '-o', '--output', nargs='?', dest='output', const='esami.md',
-        type=str, help="scrive l'output su file (default: esami.md)")
-    args = parser.parse_args()
-
-    # core dello script
-    user = input('Username: ')
-    passwd = getpass.getpass('Password: ')
-    esami = Scraper(user, passwd).tab_parse('test.html')
-    print_table(esami, args.output, args.sorted)
-
-
 def print_table(esami, filename, sort_flag):
     # crea una tabella (in sintassi markdown)
     # della lista esami che verra'
@@ -113,7 +104,11 @@ def print_table(esami, filename, sort_flag):
 
     for materia in esami:
         table.append_row([
-            materia[1], materia[2], materia[4], materia[6], ''])
+            materia[1] if materia[1] is not '' else '"',
+            materia[2] if materia[2] is not '' else '?',
+            materia[4],
+            materia[6] if materia[6] is not '' else '?',
+            ''])
 
     if filename is None:
         print(table)
@@ -131,10 +126,38 @@ def sort(target, key='Data'):
         target.sort(key=lambda materia: materia[4])
     elif key == 'Scadenza':
         target.sort(key=lambda materia: dt.strptime(
-            materia[6], "%d-%m-%Y %H:%M"))
+            materia[6], "%d-%m-%Y %H:%M") if materia[6] is not ''
+            else dt.strptime(materia[2], ""))
     else:
         target.sort(key=lambda materia: dt.strptime(
-            materia[2], "%d-%m-%Y %H:%M"))
+            materia[2], "%d-%m-%Y %H:%M") if materia[2] is not ''
+            else dt.strptime(materia[2], ""))
+
+
+def main():
+    # inizializzazione degli argomenti
+    # che posso essere passati da shell
+
+    parser = argparse.ArgumentParser(
+        description='Script le date degli appelli del PoliTo.')
+    parser.add_argument(
+        '-u', '--user', dest='username', type=str, action='store',
+        help="inserimento esplicito dell'username")
+    parser.add_argument(
+        '-s', '--sort', dest='sorted', nargs='?', default='Data',
+        const='Data', type=str, help='ordinamento delle materie (default: Data)',
+        choices=['Nome', 'Data', 'Tipo', 'Scadenza'])
+    parser.add_argument(
+        '-o', '--output', nargs='?', dest='output', const='esami.md',
+        type=str, help="scrive l'output su file (default: esami.md)")
+    args = parser.parse_args()
+
+    # core dello script
+    user = input('Username: ') if args.username is None else args.username
+    passwd = getpass.getpass('Password: ')
+    esami = Scraper(user, passwd).parse_table()
+
+    print_table(esami, args.output, args.sorted)
 
 
 if __name__ == '__main__':
