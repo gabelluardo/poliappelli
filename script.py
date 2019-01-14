@@ -4,14 +4,22 @@ import sys
 import argparse
 import urllib.request
 import os.path
+import getpass
 from bs4 import BeautifulSoup
 from beautifultable import BeautifulTable
 from datetime import datetime as dt
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.firefox.options import Options
 
 
 class Scraper:
-    def __init__(self):
+    def __init__(self, user, passwd):
         self.esami = list()
+        self.user = user
+        self.passwd = passwd
 
     def _openfile(self, path):
         return urllib.request.urlopen('file:' + path).read()
@@ -19,14 +27,47 @@ class Scraper:
     def _openurl(self, url):
         return urllib.request.urlopen(url).read()
 
-    def tab_parse(self, path, tag='table'):
+    def find_table(self):
+        url = str()
+
+        # opzione per nascondere la finestra del browser
+        options = Options()
+        options.headless = True
+
+        driver = webdriver.Firefox(options=None)
+        driver.get('https://idp.polito.it/idp/x509mixed-login')
+
+        # login al portale della didattica
+        userElement = driver.find_element_by_id('j_username')
+        passElement = driver.find_element_by_id('j_password')
+        userElement.send_keys(self.user)
+        passElement.send_keys(self.passwd)
+        userElement.submit()
+        passElement.submit()
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, 'Portale della Didattica')))
+
+        driver.find_element_by_link_text('Portale della Didattica').click()
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, 'Consultazione e prenotazione esami')))
+        driver.find_element_by_link_text(
+            'Consultazione e prenotazione esami').click()
+
+
+        WebDriverWait(driver, 10).until(EC.title_is('Prenotazione Esami'))
+        url = driver.current_url
+        print(url)
+
+        driver.close()
+
+        return url
+
+    def tab_parse(self, path=None, tag='table'):
         # parsifica tutte le table che trova
         # nella pagina/file html e ne salva
         # i campi nella lista self.esami
         # ordinati per data dell'esame
 
-        target = self._openfile(path) if os.path.isfile(
-            path) else self._openurl(path)
+        target = self._openfile(
+            path) if path is not None else self._openurl(self.find_table())
 
         for table in BeautifulSoup(target, "lxml").find_all(tag):
             for tr in table.find_all('tr'):
@@ -52,7 +93,9 @@ def main():
     args = parser.parse_args()
 
     # core dello script
-    esami = Scraper().tab_parse('test.html')
+    user = input('Username: ')
+    passwd = getpass.getpass('Password: ')
+    esami = Scraper(user, passwd).tab_parse('test.html')
     print_table(esami, args.output, args.sorted)
 
 
