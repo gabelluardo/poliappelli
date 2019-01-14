@@ -39,7 +39,8 @@ class Scraper:
         opt = Options()
         opt.headless = True
 
-        driver = webdriver.Firefox(options=opt)
+        driver = webdriver.Firefox(
+            options=opt, executable_path="./geckodriver")
         driver.get('https://idp.polito.it/idp/x509mixed-login')
 
         # TODO: caso di credenziali sbagliate
@@ -82,10 +83,16 @@ class Scraper:
         target = self._openfile(
             path) if path is not None else self._openurl(self.find_table())
 
+        prec = list()
         for table in BeautifulSoup(target, "lxml").find_all(tag):
             for tr in table.find_all('tr'):
                 row = [cell.text.strip() for cell in tr.find_all('td')]
                 if row.__len__() > 0:
+                    # evita di lasciare campi vuoti
+                    if row[1] == '' and prec.__len__() > 0:
+                        row[1] = prec[1]
+                    prec = row.copy()
+
                     self.esami.append(row)
         return self.esami
 
@@ -95,6 +102,7 @@ def print_table(esami, filename, sort_flag):
     # della lista esami che verra'
     # ordinata secondo il sort_flag
     # stampata su terminale oppure su file
+
     sort(esami, sort_flag)
 
     table = BeautifulTable(
@@ -104,7 +112,7 @@ def print_table(esami, filename, sort_flag):
 
     for materia in esami:
         table.append_row([
-            materia[1] if materia[1] is not '' else '"',
+            materia[1],
             materia[2] if materia[2] is not '' else '?',
             materia[4],
             materia[6] if materia[6] is not '' else '?',
@@ -139,7 +147,7 @@ def main():
     # che posso essere passati da shell
 
     parser = argparse.ArgumentParser(
-        description='Script le date degli appelli del PoliTo.')
+        description='Script delle date degli appelli del PoliTo.')
     parser.add_argument(
         '-u', '--user', dest='username', type=str, action='store',
         help="inserimento esplicito dell'username")
