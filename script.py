@@ -15,8 +15,28 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 
 
+# inizializzazione degli argomenti
+# che posso essere passati da shell
+parser = argparse.ArgumentParser(
+    description='Script delle date degli appelli del PoliTo.')
+parser.add_argument(
+    '-u', '--user', dest='username', type=str, action='store',
+    help="inserimento esplicito dell'username")
+parser.add_argument(
+    '-s', '--sort', dest='order', nargs='?', default='Data',
+    const='Data', type=str, help='ordinamento delle materie (default: Data)',
+    choices=['Nome', 'Data', 'Tipo', 'Scadenza'])
+parser.add_argument(
+    '-o', '--output', nargs='?', dest='output', const='esami.md',
+    type=str, help="scrive l'output su file (default: esami.md)")
+parser.add_argument(
+    '-d', '--debug', nargs='?', dest='debug', default=False, const=True,
+    type=bool, help="flag per il parse di 'test.html'")
+args = parser.parse_args()
+
+
 class Scraper:
-    def __init__(self, user, passwd):
+    def __init__(self, user=None, passwd=None):
         self.esami = list()
         self.user = user
         self.passwd = passwd
@@ -26,6 +46,9 @@ class Scraper:
 
     def _openurl(self, url):
         return urllib.request.urlopen(url).read()
+
+    def debug(self):
+        self.print_table(args.output, args.order, 'test.html')
 
     def find_table(self):
         # apre il browser Firefox per
@@ -74,7 +97,7 @@ class Scraper:
 
         return url
 
-    def parse_table(self, path=None, tag='table'):
+    def parse_table(self, path, tag='table'):
         # parsifica tutte le table che trova
         # nella pagina/file html e ne salva
         # i campi nella lista self.esami
@@ -89,83 +112,67 @@ class Scraper:
                 row = [cell.text.strip() for cell in tr.find_all('td')]
                 if row.__len__() > 0:
                     # evita di lasciare campi vuoti
-                    if row[1] == '' and prec.__len__() > 0:
+                    if row[1] == '':
                         row[1] = prec[1]
-                    prec = row.copy()
+                    prec = row
 
                     self.esami.append(row)
-        return self.esami
 
+    def print_table(self, out, order, path=None):
+        # crea una tabella (in sintassi markdown)
+        # della lista esami che verra'
+        # ordinata secondo il parametro order
+        # stampata su terminale oppure su file
 
-def print_table(esami, filename, sort_flag):
-    # crea una tabella (in sintassi markdown)
-    # della lista esami che verra'
-    # ordinata secondo il sort_flag
-    # stampata su terminale oppure su file
+        self.parse_table(path)
+        self.sort(self.esami, order)
 
-    sort(esami, sort_flag)
+        table = BeautifulTable(
+            max_width=200, default_alignment=BeautifulTable.ALIGN_LEFT)
+        table.set_style(BeautifulTable.STYLE_MARKDOWN)
+        table.column_headers = ['Nome', 'Data', 'Tipo', 'Scadenza', 'Aula']
 
-    table = BeautifulTable(
-        max_width=200, default_alignment=BeautifulTable.ALIGN_LEFT)
-    table.set_style(BeautifulTable.STYLE_MARKDOWN)
-    table.column_headers = ['Nome', 'Data', 'Tipo', 'Scadenza', 'Aula']
+        for materia in self.esami:
+            table.append_row([
+                materia[1],
+                materia[2] if materia[2] is not '' else '?',
+                materia[4],
+                materia[6] if materia[6] is not '' else '?',
+                ''])
 
-    for materia in esami:
-        table.append_row([
-            materia[1],
-            materia[2] if materia[2] is not '' else '?',
-            materia[4],
-            materia[6] if materia[6] is not '' else '?',
-            ''])
+        if out is None:
+            print(table)
+        else:
+            file = open(out, 'w')
+            file.write("## Esami\n\n")
+            file.write(str(table))
+            file.close()
 
-    if filename is None:
-        print(table)
-    else:
-        file = open(filename, 'w')
-        file.write("## Esami\n\n")
-        file.write(str(table))
-        file.close()
-
-
-def sort(target, key='Data'):
-    if key == 'Nome':
-        target.sort(key=lambda materia: materia[1])
-    elif key == 'Tipo':
-        target.sort(key=lambda materia: materia[4])
-    elif key == 'Scadenza':
-        target.sort(key=lambda materia: dt.strptime(
-            materia[6], "%d-%m-%Y %H:%M") if materia[6] is not ''
-            else dt.strptime(materia[2], ""))
-    else:
-        target.sort(key=lambda materia: dt.strptime(
-            materia[2], "%d-%m-%Y %H:%M") if materia[2] is not ''
-            else dt.strptime(materia[2], ""))
+    def sort(self, target, key):
+        if key == 'Nome':
+            target.sort(key=lambda materia: materia[1])
+        elif key == 'Tipo':
+            target.sort(key=lambda materia: materia[4])
+        elif key == 'Scadenza':
+            target.sort(key=lambda materia: dt.strptime(
+                materia[6], "%d-%m-%Y %H:%M") if materia[6] is not ''
+                else dt.strptime(materia[2], ""))
+        else:
+            target.sort(key=lambda materia: dt.strptime(
+                materia[2], "%d-%m-%Y %H:%M") if materia[2] is not ''
+                else dt.strptime(materia[2], ""))
 
 
 def main():
-    # inizializzazione degli argomenti
-    # che posso essere passati da shell
-
-    parser = argparse.ArgumentParser(
-        description='Script delle date degli appelli del PoliTo.')
-    parser.add_argument(
-        '-u', '--user', dest='username', type=str, action='store',
-        help="inserimento esplicito dell'username")
-    parser.add_argument(
-        '-s', '--sort', dest='sorted', nargs='?', default='Data',
-        const='Data', type=str, help='ordinamento delle materie (default: Data)',
-        choices=['Nome', 'Data', 'Tipo', 'Scadenza'])
-    parser.add_argument(
-        '-o', '--output', nargs='?', dest='output', const='esami.md',
-        type=str, help="scrive l'output su file (default: esami.md)")
-    args = parser.parse_args()
+    # per debug
+    if args.debug:
+        Scraper().debug()
+        return
 
     # core dello script
     user = input('Username: ') if args.username is None else args.username
     passwd = getpass.getpass('Password: ')
-    esami = Scraper(user, passwd).parse_table()
-
-    print_table(esami, args.output, args.sorted)
+    Scraper(user, passwd).print_table(args.output, args.order)
 
 
 if __name__ == '__main__':

@@ -12,15 +12,15 @@ Per creare un singolo eseguibile nella cartella dist/
 
 Fare riferimento a:
 
--   [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) per parsificare le table
--   [Selenium](https://selenium-python.readthedocs.io/) per navigazione web
--   [BeautifulTable](https://beautifultable.readthedocs.io/en/latest/index.html) per l'output della tabella
--   [Argparser](https://docs.python.org/3.6/library/argparse.html#module-argparse) per i flag da shell
+-   [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+-   [Selenium](https://selenium-python.readthedocs.io/)
+-   [BeautifulTable](https://beautifultable.readthedocs.io/en/latest/index.html)
+-   [Argparser](https://docs.python.org/3.6/library/argparse.html#module-argparse)
 -   [PyInstaller](https://pyinstaller.readthedocs.io/en/stable/)
 
 ### Prestazioni
 
-20,110s secondi + digitazione password
+ 9,765 secondi + digitazione password
 
 ### TODO
 
