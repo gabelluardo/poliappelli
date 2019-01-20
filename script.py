@@ -32,6 +32,10 @@ parser.add_argument(
 parser.add_argument(
     '-d', '--debug', nargs='?', dest='debug', default=False, const=True,
     type=bool, help="flag per il parse di 'test.html'")
+parser.add_argument(
+    '-m', '--mesi', nargs='?', dest='mesi', default=4, const=12,
+    type=int, help="range di mesi (default: 12 | non inserito: 4)"
+    )
 args = parser.parse_args()
 
 
@@ -75,7 +79,7 @@ class Scraper:
         passElement.send_keys(self.passwd)
         userElement.submit()
 
-        # TODO: chiudere i popup
+        # TODO: chiudere eventuali popup
 
         # TODO: caso di credenziali sbagliate
         WebDriverWait(driver, 10).until(EC.presence_of_element_located(
@@ -88,10 +92,16 @@ class Scraper:
         driver.find_element_by_link_text(
             'Consultazione e prenotazione esami').click()
 
-        # TODO: aggiungere opzione casella 10 mesi
-
         # TODO: pagina non caricata
         WebDriverWait(driver, 10).until(EC.title_is('Prenotazione Esami'))
+        if args.mesi != 4:
+            form = driver.find_element_by_name('mesi_appelli')
+            form.clear()
+            form.send_keys(args.mesi)
+            form.submit()
+            WebDriverWait(driver, 10).until(EC.url_changes(driver.current_url))
+
+        # TODO: pagina non caricata
         url = driver.current_url
         driver.close()
 
