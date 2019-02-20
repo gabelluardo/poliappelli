@@ -4,9 +4,12 @@ Script per ricordare tutte le date degli appelli del PoliTo
 
 ### Build
 
-Per creare un singolo eseguibile nella cartella dist/  
-`pip install --user pyinstaller`  
-`pyinstaller --oneline script.py`
+**Richiesti:**
+
+-   pipenv
+-   make
+
+lanciare la compilazione con `make`
 
 ### Utili
 
@@ -34,3 +37,11 @@ Fare riferimento a:
 -   [ ] memorizzazione utente. (salvare password??? NO)
 -   [x] flag da shell
 -   [ ] aggiungere progressbar
+
+### License
+
+GNU GPL3
+
+### SO
+
+Linux
