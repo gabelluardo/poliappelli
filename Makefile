@@ -10,4 +10,4 @@ compile:
 	mv dist/* .
 
 clean:
-	rm -rf __pycache__/ build/ dist/ *.spec *.log .venv
+	rm -rf __pycache__/ build/ dist/ *.spec *.log .venv/
