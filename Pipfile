@@ -4,6 +4,8 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
+autopep8 = "*"
 
 [packages]
 altgraph = "==0.16.1"
@@ -19,6 +21,4 @@ urllib3 = "==1.24.1"
 wcwidth = "==0.1.7"
 EasyProcess = "==0.2.5"
 PyInstaller = "==3.4"
-
-[requires]
-python_version = "3.6"
+tqdm = "*"

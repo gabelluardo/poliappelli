@@ -5,6 +5,7 @@ import argparse
 import urllib.request
 import getpass
 
+from tqdm import tqdm
 from bs4 import BeautifulSoup
 from beautifultable import BeautifulTable
 from datetime import datetime as dt
@@ -23,6 +24,9 @@ parser.add_argument(
     '-u', '--user', dest='username', type=str, action='store',
     help="inserimento esplicito dell'username")
 parser.add_argument(
+    '-p', '--passwd', dest='passwd', type=str, action='store',
+    help="inserimento esplicito della password (sconsigliato)")
+parser.add_argument(
     '-s', '--sort', dest='order', nargs='?', default='Data',
     const='Data', type=str, help='ordinamento delle materie (default: Data)',
     choices=['Nome', 'Data', 'Tipo', 'Scadenza'])
@@ -35,7 +39,7 @@ parser.add_argument(
 parser.add_argument(
     '-m', '--mesi', nargs='?', dest='mesi', default=4, const=12,
     type=int, help="range di mesi (default: 12 | non inserito: 4)"
-    )
+)
 args = parser.parse_args()
 
 
@@ -61,6 +65,7 @@ class Scraper:
         # pagina degli appelli
 
         url = str()
+        pbar = tqdm(total=100, desc='Scraping')
 
         # opzione per nascondere la finestra del browser
         opt = Options()
@@ -79,6 +84,8 @@ class Scraper:
         passElement.send_keys(self.passwd)
         userElement.submit()
 
+        pbar.update(25)
+
         # TODO: chiudere eventuali popup
 
         # TODO: caso di credenziali sbagliate
@@ -86,11 +93,15 @@ class Scraper:
             (By.LINK_TEXT, 'Portale della Didattica')))
         driver.find_element_by_link_text('Portale della Didattica').click()
 
+        pbar.update(25)
+
         # TODO: pagina non caricata
         WebDriverWait(driver, 10).until(EC.presence_of_element_located(
             (By.LINK_TEXT, 'Consultazione e prenotazione esami')))
         driver.find_element_by_link_text(
             'Consultazione e prenotazione esami').click()
+
+        pbar.update(25)
 
         # TODO: pagina non caricata
         WebDriverWait(driver, 10).until(EC.title_is('Prenotazione Esami'))
@@ -101,9 +112,13 @@ class Scraper:
             form.submit()
             WebDriverWait(driver, 10).until(EC.url_changes(driver.current_url))
 
+        pbar.update(25)
+
         # TODO: pagina non caricata
         url = driver.current_url
+
         driver.close()
+        pbar.close()
 
         return url
 
@@ -153,10 +168,9 @@ class Scraper:
         if out is None:
             print(table)
         else:
-            file = open(out, 'w')
-            file.write("## Esami\n\n")
-            file.write(str(table))
-            file.close()
+            with open(out, 'w') as f:
+                f.write("## Esami\n\n")
+                f.write(str(table))
 
     def sort(self, target, key):
         if key == 'Nome':
@@ -181,7 +195,7 @@ def main():
 
     # core dello script
     user = input('Username: ') if args.username is None else args.username
-    passwd = getpass.getpass('Password: ')
+    passwd = getpass.getpass('Password: ') if args.passwd is None else args.passwd
     Scraper(user, passwd).print_table(args.output, args.order)
 
 
