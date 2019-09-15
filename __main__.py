@@ -4,6 +4,7 @@ import sys
 import argparse
 import urllib.request
 import getpass
+import warnings
 
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -64,15 +65,13 @@ class Scraper:
         # e recuperare l'url termporaneo della
         # pagina degli appelli
 
-        url = str()
         pbar = tqdm(total=100, desc='Scraping')
 
         # opzione per nascondere la finestra del browser
         opt = Options()
         opt.headless = True
 
-        driver = webdriver.Firefox(
-            options=opt, executable_path="./geckodriver")
+        driver = webdriver.Firefox(options=opt, executable_path="./geckodriver")
         driver.get('https://idp.polito.it/idp/x509mixed-login')
 
         # TODO: caso di credenziali sbagliate
@@ -98,8 +97,7 @@ class Scraper:
         # TODO: pagina non caricata
         WebDriverWait(driver, 10).until(EC.presence_of_element_located(
             (By.LINK_TEXT, 'Consultazione e prenotazione esami')))
-        driver.find_element_by_link_text(
-            'Consultazione e prenotazione esami').click()
+        driver.find_element_by_link_text('Consultazione e prenotazione esami').click()
 
         pbar.update(25)
 
@@ -115,7 +113,7 @@ class Scraper:
         pbar.update(25)
 
         # TODO: pagina non caricata
-        url = driver.current_url
+        url = str(driver.current_url)
 
         driver.close()
         pbar.close()
@@ -135,12 +133,12 @@ class Scraper:
         for table in BeautifulSoup(target, "lxml").find_all(tag):
             for tr in table.find_all('tr'):
                 row = [cell.text.strip() for cell in tr.find_all('td')]
-                if row.__len__() > 0:
+                if len(row) > 0:
                     # evita di lasciare campi vuoti
                     if row[1] == '':
                         row[1] = prec[1]
-                    prec = row
 
+                    prec = row
                     self.esami.append(row)
 
     def print_table(self, out, order, path=None):
@@ -196,7 +194,9 @@ def main():
     # core dello script
     user = input('Username: ') if args.username is None else args.username
     passwd = getpass.getpass('Password: ') if args.passwd is None else args.passwd
-    Scraper(user, passwd).print_table(args.output, args.order)
+
+    with warnings.catch_warnings(record=True):
+        Scraper(user, passwd).print_table(args.output, args.order)
 
 
 if __name__ == '__main__':
