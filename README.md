@@ -20,7 +20,7 @@ Oppure
 
     python3 . -u sxxxxxx -p xxxxxxxx
 
-per tutte le opzioni: `./scritp -h`
+per tutte le opzioni: `./script -h`
 ```
 usage: script [-h] [-u USERNAME] [-p PASSWD] [-s [{Nome,Data,Tipo,Scadenza}]] [-o [OUTPUT]] [-d [DEBUG]] [-m [MESI]]
 
