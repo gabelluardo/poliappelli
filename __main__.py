@@ -1,4 +1,4 @@
-#!./venv/bin/python3
+#!./venv/bin/python
 
 import sys
 import argparse
@@ -15,7 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
-
+from selenium.common.exceptions import WebDriverException
 
 # inizializzazione degli argomenti
 # che posso essere passati da shell
@@ -43,6 +43,10 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+# costanti messaggio errore
+RED = '\033[91m'
+ENDC = '\033[0m'
+
 
 class Scraper:
     def __init__(self, user=None, passwd=None):
@@ -65,14 +69,18 @@ class Scraper:
         # e recuperare l'url termporaneo della
         # pagina degli appelli
 
-        pbar = tqdm(total=100, desc='Scraping')
-
         # opzione per nascondere la finestra del browser
         opt = Options()
         opt.headless = True
 
-        driver = webdriver.Firefox(options=opt, executable_path="./geckodriver")
+        try:
+            driver = webdriver.Firefox(options=opt, executable_path="./geckodriver")
+        except WebDriverException:
+            print(RED + 'ERROR: geckodriver executable needs to be in PATH or in the current folder' + ENDC)
+            sys.exit(1)
+
         driver.get('https://idp.polito.it/idp/x509mixed-login')
+        pbar = tqdm(total=100, desc='Scraping')
 
         # TODO: caso di credenziali sbagliate
 
