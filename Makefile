@@ -1,12 +1,12 @@
 PE := PIPENV_VENV_IN_PROJECT
 SP := __main__.py
 
-all: compile clean
+all: install clean
 .PHONY: all
 
-compile:
-	$(PE)=1 pipenv install
-	pipenv run pyinstaller --onefile $(SP) -n script
+install:
+	$(PE)=1 pipenv install 
+	pipenv run pyinstaller $(SP) -n script --onefile
 	mv dist/* .
 
 clean:

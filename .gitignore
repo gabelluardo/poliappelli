@@ -46,4 +46,4 @@ test.html
 script
 geckodriver*
 *.md
-.login
+.login.txt
