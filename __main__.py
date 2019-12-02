@@ -1,16 +1,17 @@
 #!./venv/bin/python
 
-import argparse
-import urllib.request
-import getpass
-import warnings
-import os
-
+from os import path
+from sys import exit
 from tqdm import tqdm
+from getpass import getpass
 from bs4 import BeautifulSoup
-from beautifultable import BeautifulTable
+from urllib.request import urlopen
+from warnings import catch_warnings
 from datetime import datetime as dt
-from selenium import webdriver
+from argparse import ArgumentParser
+from beautifultable import BeautifulTable, ALIGN_LEFT, STYLE_MARKDOWN
+
+from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,11 +20,11 @@ from selenium.common.exceptions import WebDriverException
 
 # inizializzazione degli argomenti
 # che posso essere passati da shell
-parser = argparse.ArgumentParser(
+parser = ArgumentParser(
     description='Script delle date degli appelli del PoliTo.')
 parser.add_argument(
     '-l', '--login', nargs='?', dest='login', default=True, const=False,
-    type=bool, action='store', help="riscrivere le credenziali nel file .login")
+    type=bool, action='store', help="riscrivere le credenziali nel file .login.txt")
 parser.add_argument(
     '-s', '--sort', dest='order', nargs='?', default='Data',
     const='Data', type=str, help='ordinamento delle materie (default: Data)',
@@ -40,7 +41,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-dir_ = os.path.dirname(os.path.realpath(__file__))
+dir_ = path.dirname(path.realpath(__file__))
 
 # costanti messaggio errore
 RED = '\033[91m'
@@ -55,10 +56,10 @@ class Scraper:
         print('Execution time depends on your connection, please be patient...')
 
     def _openfile(self, path):
-        return urllib.request.urlopen('file:' + path).read()
+        return urlopen('file:' + path).read()
 
     def _openurl(self, url):
-        return urllib.request.urlopen(url).read()
+        return urlopen(url).read()
 
     def debug(self):
         self.print_table(args.output, args.order, 'test.html')
@@ -69,18 +70,19 @@ class Scraper:
         # e recuperare l'url termporaneo della
         # pagina degli appelli
 
+        pbar = tqdm(total=100, desc='Scraping')
+
         # opzione per nascondere la finestra del browser
         opt = Options()
         opt.headless = True
 
         try:
-            driver = webdriver.Firefox(options=opt, executable_path="./geckodriver")
+            driver = Firefox(options=opt, executable_path="./geckodriver")
         except WebDriverException:
             print(RED + 'ERROR: geckodriver executable needs to be in PATH or in the current folder' + ENDC)
             exit(1)
 
         driver.get('https://idp.polito.it/idp/x509mixed-login')
-        pbar = tqdm(total=100, desc='Scraping')
 
         # TODO: caso di credenziali sbagliate
 
@@ -138,7 +140,7 @@ class Scraper:
             path) if path is not None else self._openurl(self.find_table())
 
         prec = list()
-        for table in BeautifulSoup(target, "lxml").find_all(tag):
+        for table in BeautifulSoup(target, 'html.parser').find_all(tag):
             for tr in table.find_all('tr'):
                 row = [cell.text.strip() for cell in tr.find_all('td')]
                 if len(row) > 0:
@@ -160,8 +162,8 @@ class Scraper:
         print()
 
         table = BeautifulTable(
-            max_width=200, default_alignment=BeautifulTable.ALIGN_LEFT)
-        table.set_style(BeautifulTable.STYLE_MARKDOWN)
+            max_width=200, default_alignment=ALIGN_LEFT)
+        table.set_style(STYLE_MARKDOWN)
         table.column_headers = ['Nome', 'Data', 'Tipo', 'Scadenza', 'Aula']
 
         for materia in self.esami:
@@ -195,18 +197,18 @@ class Scraper:
 
 
 def credentials():
-    if os.path.exists(f'{dir_}/.login') and args.login:
-        with open(f'{dir_}/.login', 'r') as f:
+    if path.exists(f'{dir_}/.login.txt') and args.login:
+        with open(f'{dir_}/.login.txt', 'r') as f:
             user, passwd = [entry.strip() for entry in f.readlines()]
     else:
         answer = input('Do you want to save your credentials? [Y/n]: ')
         user = input('Username: ')
-        passwd = getpass.getpass('Password: ')
+        passwd = getpass('Password: ')
 
         if answer in ('', 'y', 'Y', 'yes', 'Yes', 'YES'):
-            with open(f'{dir_}/.login', 'w') as f:
+            with open(f'{dir_}/.login.txt', 'w') as f:
                 f.write(f'{user}\n{passwd}\n')
-            print(f'Credentials stored in {dir_}/.login\n')
+            print(f'Credentials stored in {dir_}/.login.txt\n')
 
     return user, passwd
 
@@ -221,7 +223,7 @@ def main():
 
     try:
         # core dello script
-        with warnings.catch_warnings(record=True):
+        with catch_warnings(record=True):
             Scraper(user, passwd).print_table(args.output, args.order)
             print()
     except KeyboardInterrupt:
