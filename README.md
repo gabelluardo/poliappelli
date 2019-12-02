@@ -62,10 +62,10 @@ Linux
 ### TODO
 
 -   [x] beautify output markdown
--   [x] scriverlo meglio
 -   [x] ordine di data/alfabetico
     -   [ ] ordine inverso
 -   [x] navigazione web: inserimento di solo user e password per accedere al portale polito
 -   [x] visualizzazione da terminale
 -   [x] flag da shell
 -   [x] aggiungere progressbar
+-   [x] salvataggio credenziali

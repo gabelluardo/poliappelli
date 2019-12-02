@@ -1,10 +1,10 @@
 #!./venv/bin/python
 
-import sys
 import argparse
 import urllib.request
 import getpass
 import warnings
+import os
 
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -22,11 +22,8 @@ from selenium.common.exceptions import WebDriverException
 parser = argparse.ArgumentParser(
     description='Script delle date degli appelli del PoliTo.')
 parser.add_argument(
-    '-u', '--user', dest='username', type=str, action='store',
-    help="inserimento esplicito dell'username")
-parser.add_argument(
-    '-p', '--passwd', dest='passwd', type=str, action='store',
-    help="inserimento esplicito della password (sconsigliato)")
+    '-l', '--login', nargs='?', dest='login', default=True, const=False,
+    type=bool, action='store', help="riscrivere le credenziali nel file .login")
 parser.add_argument(
     '-s', '--sort', dest='order', nargs='?', default='Data',
     const='Data', type=str, help='ordinamento delle materie (default: Data)',
@@ -43,6 +40,8 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+dir_ = os.path.dirname(os.path.realpath(__file__))
+
 # costanti messaggio errore
 RED = '\033[91m'
 ENDC = '\033[0m'
@@ -53,6 +52,7 @@ class Scraper:
         self.esami = list()
         self.user = user
         self.passwd = passwd
+        print('Execution time depends on your connection, please be patient...')
 
     def _openfile(self, path):
         return urllib.request.urlopen('file:' + path).read()
@@ -77,7 +77,7 @@ class Scraper:
             driver = webdriver.Firefox(options=opt, executable_path="./geckodriver")
         except WebDriverException:
             print(RED + 'ERROR: geckodriver executable needs to be in PATH or in the current folder' + ENDC)
-            sys.exit(1)
+            exit(1)
 
         driver.get('https://idp.polito.it/idp/x509mixed-login')
         pbar = tqdm(total=100, desc='Scraping')
@@ -96,27 +96,27 @@ class Scraper:
         # TODO: chiudere eventuali popup
 
         # TODO: caso di credenziali sbagliate
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located(
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located(
             (By.LINK_TEXT, 'Portale della Didattica')))
         driver.find_element_by_link_text('Portale della Didattica').click()
 
         pbar.update(25)
 
         # TODO: pagina non caricata
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located(
+        WebDriverWait(driver, 20).until(EC.presence_of_element_located(
             (By.LINK_TEXT, 'Consultazione e prenotazione esami')))
         driver.find_element_by_link_text('Consultazione e prenotazione esami').click()
 
         pbar.update(25)
 
         # TODO: pagina non caricata
-        WebDriverWait(driver, 10).until(EC.title_is('Prenotazione Esami'))
+        WebDriverWait(driver, 20).until(EC.title_is('Prenotazione Esami'))
         if args.mesi != 4:
             form = driver.find_element_by_name('mesi_appelli')
             form.clear()
             form.send_keys(args.mesi)
             form.submit()
-            WebDriverWait(driver, 10).until(EC.url_changes(driver.current_url))
+            WebDriverWait(driver, 20).until(EC.url_changes(driver.current_url))
 
         pbar.update(25)
 
@@ -157,6 +157,7 @@ class Scraper:
 
         self.parse_table(path)
         self.sort(self.esami, order)
+        print()
 
         table = BeautifulTable(
             max_width=200, default_alignment=BeautifulTable.ALIGN_LEFT)
@@ -193,19 +194,39 @@ class Scraper:
                 else dt.strptime(materia[2], ""))
 
 
+def credentials():
+    if os.path.exists(f'{dir_}/.login') and args.login:
+        with open(f'{dir_}/.login', 'r') as f:
+            user, passwd = [entry.strip() for entry in f.readlines()]
+    else:
+        answer = input('Do you want to save your credentials? [Y/n]: ')
+        user = input('Username: ')
+        passwd = getpass.getpass('Password: ')
+
+        if answer in ('', 'y', 'Y', 'yes', 'Yes', 'YES'):
+            with open(f'{dir_}/.login', 'w') as f:
+                f.write(f'{user}\n{passwd}\n')
+            print(f'Credentials stored in {dir_}/.login\n')
+
+    return user, passwd
+
+
 def main():
     # per debug
     if args.debug:
         Scraper().debug()
         return
 
-    # core dello script
-    user = input('Username: ') if args.username is None else args.username
-    passwd = getpass.getpass('Password: ') if args.passwd is None else args.passwd
+    user, passwd = credentials()
 
-    with warnings.catch_warnings(record=True):
-        Scraper(user, passwd).print_table(args.output, args.order)
+    try:
+        # core dello script
+        with warnings.catch_warnings(record=True):
+            Scraper(user, passwd).print_table(args.output, args.order)
+            print()
+    except KeyboardInterrupt:
+        exit()
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    exit(main())
