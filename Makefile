@@ -1,5 +1,5 @@
 PE := PIPENV_VENV_IN_PROJECT
-SP := __main__.py
+SP := poliappelli/__main__.py
 
 all: install clean
 .PHONY: all

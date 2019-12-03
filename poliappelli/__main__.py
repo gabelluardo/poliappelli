@@ -41,7 +41,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-dir_ = path.dirname(path.realpath(__file__))
+dir_ = path.dirname(path.dirname(path.realpath(__file__)))
 
 # costanti messaggio errore
 RED = '\033[91m'
@@ -77,7 +77,7 @@ class Scraper:
         opt.headless = True
 
         try:
-            driver = Firefox(options=opt, executable_path="./geckodriver")
+            driver = Firefox(options=opt, executable_path=f"{dir_}/geckodriver")
         except WebDriverException:
             print(RED + 'ERROR: geckodriver executable needs to be in PATH or in the current folder' + ENDC)
             exit(1)
@@ -219,9 +219,9 @@ def main():
         Scraper().debug()
         return
 
-    user, passwd = credentials()
-
     try:
+        user, passwd = credentials()
+
         # core dello script
         with catch_warnings(record=True):
             Scraper(user, passwd).print_table(args.output, args.order)
