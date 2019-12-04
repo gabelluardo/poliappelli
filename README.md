@@ -39,7 +39,6 @@ optional arguments:
   -s [{Nome,Data,Tipo,Scadenza}], 
     --sort [{Nome,Data,Tipo,Scadenza}]  ordinamento delle materie (default: Data)
   -o [OUTPUT], --output [OUTPUT]        scrive l'output su file (default: esami.md)
-  -d [DEBUG], --debug [DEBUG]           flag per il parse di 'test.html'
   -m [MESI], --mesi [MESI]              range di mesi (default: 12 | non inserito: 4)
 ```
 

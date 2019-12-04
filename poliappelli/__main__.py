@@ -19,27 +19,32 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
 from selenium.common.exceptions import WebDriverException
 
+
 # inizializzazione degli argomenti
 # che posso essere passati da shell
 parser = ArgumentParser(
     description='Script delle date degli appelli del PoliTo.')
 parser.add_argument(
     '-l', '--login', nargs='?', dest='login', default=True, const=False,
-    type=bool, action='store', help="riscrivere le credenziali nel file .poliappelli")
+    type=bool, action='store', help='riscrivere le credenziali nel file .poliappelli')
 parser.add_argument(
     '-s', '--sort', dest='order', nargs='?', default='Data',
     const='Data', type=str, help='ordinamento delle materie (default: Data)',
     choices=['Nome', 'Data', 'Tipo', 'Scadenza'])
 parser.add_argument(
     '-o', '--output', nargs='?', dest='output', const='esami.md',
-    type=str, help="scrive l'output su file (default: esami.md)")
-parser.add_argument(
-    '-d', '--debug', nargs='?', dest='debug', default=False, const=True,
-    type=bool, help="flag per il parse di 'test.html'")
+    type=str, help='scrive l\'output su file(default: esami.md)')
 parser.add_argument(
     '-m', '--mesi', nargs='?', dest='mesi', default=4, const=12,
-    type=int, help="range di mesi (default: 12 | non inserito: 4)"
+    type=int, help='range di mesi (default: 12 | non inserito: 4)'
 )
+
+# Usato solo in caso di debug di file html di esempio
+#
+# parser.add_argument(
+#     '-d', '--debug', nargs='?', dest='debug', default=False, const=True,
+#     type=bool, help='flag per il parse di \'test.html\'')
+
 args = parser.parse_args()
 
 curr_dir = path.dirname(path.realpath(__file__))
@@ -80,9 +85,13 @@ class Scraper:
         gecko = path.realpath('geckodriver') if path.exists('geckodriver') else 'geckodriver'
 
         try:
-            driver = Firefox(options=opt, executable_path=gecko)
+            driver = Firefox(
+                options=opt,
+                executable_path=gecko,
+                service_log_path='/dev/null'
+            )
         except WebDriverException:
-            print(RED + 'ERROR: geckodriver executable needs to be in PATH or in the current folder' + ENDC)
+            print('{RED}ERROR: geckodriver executable needs to be in PATH or in the current folder{ENDC}')
             exit(1)
 
         driver.get('https://idp.polito.it/idp/x509mixed-login')
@@ -181,7 +190,7 @@ class Scraper:
             print(table)
         else:
             with open(out, 'w') as f:
-                f.write("## Esami\n\n")
+                f.write('## Esami\n\n')
                 f.write(str(table))
 
     def sort(self, target, key):
@@ -191,12 +200,12 @@ class Scraper:
             target.sort(key=lambda materia: materia[4])
         elif key == 'Scadenza':
             target.sort(key=lambda materia: dt.strptime(
-                materia[6], "%d-%m-%Y %H:%M") if materia[6] is not ''
-                else dt.strptime(materia[2], ""))
+                materia[6], '%d-%m-%Y %H:%M') if materia[6] is not ''
+                else dt.strptime(materia[2], ''))
         else:
             target.sort(key=lambda materia: dt.strptime(
-                materia[2], "%d-%m-%Y %H:%M") if materia[2] is not ''
-                else dt.strptime(materia[2], ""))
+                materia[2], '%d-%m-%Y %H:%M') if materia[2] is not ''
+                else dt.strptime(materia[2], ''))
 
 
 def credentials():
@@ -225,9 +234,9 @@ def credentials():
 
 def main():
     # per debug
-    if args.debug:
-        Scraper().debug()
-        return
+    # if args.debug:
+    #     Scraper().debug()
+    #     exit()
 
     try:
         user, passwd = credentials()
