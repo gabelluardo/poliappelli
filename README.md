@@ -19,7 +19,7 @@ Script per ricordare tutte le date degli appelli del PoliTo
 Poi sposta `dist/poliappelli` da qualche parte nel tuo `$PATH`
 
     cd dist/
-    mv poliappelli /usr/bin
+    mv poliappelli ~/.local/bin
 
 ### Uso
 
