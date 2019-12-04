@@ -4,8 +4,8 @@ from platform import system
 from getpass import getpass
 from warnings import catch_warnings
 
-from .parser import args
-from .scaper import Scraper
+from poliappelli.parser import args
+from poliappelli.scaper import Scraper
 
 
 curr_dir = path.dirname(path.realpath(__file__))

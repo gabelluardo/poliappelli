@@ -73,3 +73,4 @@ GNU GPL3
 -   [x] flag da shell
 -   [x] aggiungere progressbar
 -   [x] salvataggio credenziali
+-   [ ] scrivere i test
