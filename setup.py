@@ -4,7 +4,7 @@ import re
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
-with open('pyxbee/__init__.py', 'r') as f:
+with open('poliappelli/__init__.py', 'r') as f:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         f.read(), re.MULTILINE).group(1)
 
@@ -18,6 +18,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://gitlab.com/gabelluardo/poliappelli',
     packages=['poliappelli'],
+    entry_points={'console_scripts': ['poliappelli=poliappelli.__main__:main'], },
     classifiers=[
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
@@ -26,6 +27,11 @@ setuptools.setup(
         'Topic :: Utilities',
     ],
     python_requires='>=3.6',
-    install_requires=['tqdm', 'selenium', 'beautifulsoup4', 'beautifultable'],
-    extras_require={'dev': ['PyInstaller', 'pylint', 'autopep8']},
+    install_requires=[
+        'tqdm==4.40.0',
+        'selenium==3.141.0',
+        'beautifulsoup4==3.5',
+        'beautifultable==4.8.1'
+    ],
+    extras_require={'dev': ['PyInstaller==3.5', 'pylint', 'autopep8']},
 )
