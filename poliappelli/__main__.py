@@ -3,6 +3,7 @@
 from os import path
 from sys import exit
 from tqdm import tqdm
+from platform import system
 from getpass import getpass
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
@@ -24,7 +25,7 @@ parser = ArgumentParser(
     description='Script delle date degli appelli del PoliTo.')
 parser.add_argument(
     '-l', '--login', nargs='?', dest='login', default=True, const=False,
-    type=bool, action='store', help="riscrivere le credenziali nel file .login.txt")
+    type=bool, action='store', help="riscrivere le credenziali nel file .poliappelli")
 parser.add_argument(
     '-s', '--sort', dest='order', nargs='?', default='Data',
     const='Data', type=str, help='ordinamento delle materie (default: Data)',
@@ -41,7 +42,8 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-dir_ = path.dirname(path.dirname(path.realpath(__file__)))
+curr_dir = path.dirname(path.realpath(__file__))
+login_file = 'poliappelli.txt' if system() == 'Windows' else '.poliappelli'
 
 # costanti messaggio errore
 RED = '\033[91m'
@@ -75,9 +77,10 @@ class Scraper:
         # opzione per nascondere la finestra del browser
         opt = Options()
         opt.headless = True
+        gecko = path.realpath('geckodriver') if path.exists('geckodriver') else 'geckodriver'
 
         try:
-            driver = Firefox(options=opt, executable_path=f"{dir_}/geckodriver")
+            driver = Firefox(options=opt, executable_path=gecko)
         except WebDriverException:
             print(RED + 'ERROR: geckodriver executable needs to be in PATH or in the current folder' + ENDC)
             exit(1)
@@ -130,14 +133,14 @@ class Scraper:
 
         return url
 
-    def parse_table(self, path, tag='table'):
+    def parse_table(self, path_, tag='table'):
         # parsifica tutte le table che trova
         # nella pagina/file html e ne salva
         # i campi nella lista self.esami
         # ordinati per data dell'esame
 
         target = self._openfile(
-            path) if path is not None else self._openurl(self.find_table())
+            path_) if path_ is not None else self._openurl(self.find_table())
 
         prec = list()
         for table in BeautifulSoup(target, 'html.parser').find_all(tag):
@@ -151,13 +154,13 @@ class Scraper:
                     prec = row
                     self.esami.append(row)
 
-    def print_table(self, out, order, path=None):
+    def print_table(self, out, order, path_=None):
         # crea una tabella (in sintassi markdown)
         # della lista esami che verra'
         # ordinata secondo il parametro order
         # stampata su terminale oppure su file
 
-        self.parse_table(path)
+        self.parse_table(path_)
         self.sort(self.esami, order)
         print()
 
@@ -197,18 +200,25 @@ class Scraper:
 
 
 def credentials():
-    if path.exists(f'{dir_}/.login.txt') and args.login:
-        with open(f'{dir_}/.login.txt', 'r') as f:
+    current_path = f'{curr_dir}/{login_file}'
+    home_path = f'{path.expanduser("~")}/{login_file}'
+
+    if (path.exists(current_path) or path.exists(home_path)) and args.login:
+        path_ = current_path if path.exists(current_path) else home_path
+        with open(path_, 'r') as f:
             user, passwd = [entry.strip() for entry in f.readlines()]
     else:
-        answer = input('Do you want to save your credentials? [Y/n]: ')
         user = input('Username: ')
         passwd = getpass('Password: ')
+        answer = input('Do you want to save your credentials? [Y/n]: ')
 
         if answer in ('', 'y', 'Y', 'yes', 'Yes', 'YES'):
-            with open(f'{dir_}/.login.txt', 'w') as f:
+            path_ = input('Path of credentials file [default=$HOME]: ')
+            login = f'{path_}/{login_file}' if path_ != '' else home_path
+
+            with open(login, 'w') as f:
                 f.write(f'{user}\n{passwd}\n')
-            print(f'Credentials stored in {dir_}/.login.txt\n')
+            print(f'Credentials stored in {login}\n')
 
     return user, passwd
 
