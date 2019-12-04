@@ -10,19 +10,28 @@ Script per ricordare tutte le date degli appelli del PoliTo
 -   pipenv
 -   make
 
-lanciare la compilazione con `make`
+### Installazione
+
+    git clone --depth 1 https://gitlab.com/gabelluardo/poliappelli 
+    cd poliappelli
+    make
+
+Poi sposta `dist/poliappelli` da qualche parte nel tuo `$PATH`
+
+    cd dist/
+    mv poliappelli /usr/bin
 
 ### Uso
 
-    ./script 
+    poliappelli 
 
-Le credenziali saranno salvate in `.login.txt`, per aggiornale usare:
+Verrà chiesto di salvare le credenziali in `.login`, per aggiornale usare:
 
-    ./script -l
+    poliappelli -l
 
-per tutte le altre opzioni: `./script -h`
+per tutte le altre opzioni: `poliappelli -h`
 ```
-usage: script [-h] [-l [LOGIN]] [-s [{Nome,Data,Tipo,Scadenza}]] [-o [OUTPUT]] [-d [DEBUG]] [-m [MESI]]
+usage: poliappelli [-h] [-l [LOGIN]] [-s [{Nome,Data,Tipo,Scadenza}]] [-o [OUTPUT]] [-d [DEBUG]] [-m [MESI]]
 
 optional arguments:
   -h, --help                            show this help message and exit
@@ -36,28 +45,25 @@ optional arguments:
 
 ### Prestazioni
 
-14 secondi
+~10 secondi
+
+### Browser supportati
+
+Firefox
+Chromium (WIP)
 
 ### SO
 
 Linux  
-Windows (forse, ma con un altro [geckodriver](https://github.com/mozilla/geckodriver/releases))
+Windows (non testato)
 
-### License
+### Licenza
 
 GNU GPL3  
 [Geckodriver](https://github.com/mozilla/geckodriver) è software Mozilla sotto MPL
 
 
 --- 
-
-### Doc
-
--   [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
--   [Selenium](https://selenium-python.readthedocs.io/)
--   [BeautifulTable](https://beautifultable.readthedocs.io/en/latest/index.html)
--   [Argparser](https://docs.python.org/3.6/library/argparse.html#module-argparse)
--   [PyInstaller](https://pyinstaller.readthedocs.io/en/stable/)
 
 
 ### TODO

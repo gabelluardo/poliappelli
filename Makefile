@@ -6,8 +6,9 @@ all: install clean
 
 install:
 	$(PE)=1 pipenv install 
-	pipenv run pyinstaller $(SP) -n script --onefile
-	mv dist/* .
+	pipenv run pyinstaller $(SP) -n poliappelli --onefile
+#	 mv dist/* .
 
 clean:
-	rm -rf __pycache__/ build/ dist/ *.spec *.log .venv/
+	rm -rf __pycache__/ build/ *.spec *.log 
+#   rm -rf .venv/ dist/
