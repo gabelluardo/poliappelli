@@ -30,8 +30,8 @@ setuptools.setup(
     install_requires=[
         'tqdm==4.40.0',
         'selenium==3.141.0',
-        'beautifulsoup4==3.5',
-        'beautifultable==4.8.1'
+        'beautifulsoup4==4.8.1',
+        'beautifultable==0.8.0'
     ],
     extras_require={'dev': ['PyInstaller==3.5', 'pylint', 'autopep8']},
 )
