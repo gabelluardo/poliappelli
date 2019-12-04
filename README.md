@@ -23,23 +23,21 @@ Poi sposta `dist/poliappelli` da qualche parte nel tuo `$PATH`
 
 ### Uso
 
-    poliappelli 
+Verrà chiesto di salvare le credenziali in `.login`, per aggiornale: `poliappelli -l`
 
-Verrà chiesto di salvare le credenziali in `.login`, per aggiornale usare:
+per tutte le altre opzioni:
 
-    poliappelli -l
-
-per tutte le altre opzioni: `poliappelli -h`
 ```
-usage: poliappelli [-h] [-l [LOGIN]] [-s [{Nome,Data,Tipo,Scadenza}]] [-o [OUTPUT]] [-d [DEBUG]] [-m [MESI]]
+> poliappelli -h
+
+usage: poliappelli [-h] [-l [LOGIN]] [-s [{Nome,Data,Tipo,Scadenza}]] [-o [FILE]] [-m [MESI]]
 
 optional arguments:
-  -h, --help                            show this help message and exit
-  -l [LOGIN], --login [LOGIN]           riscrivere le credenziali nel file .login.txt
-  -s [{Nome,Data,Tipo,Scadenza}], 
-    --sort [{Nome,Data,Tipo,Scadenza}]  ordinamento delle materie (default: Data)
-  -o [OUTPUT], --output [OUTPUT]        scrive l'output su file (default: esami.md)
-  -m [MESI], --mesi [MESI]              range di mesi (default: 12 | non inserito: 4)
+  -h, --help   show this help message and exit
+  -l, --login  riscrivere le credenziali nel file .poliappelli
+  -s, --sort   ordinamento delle materie (default: Data)
+  -o, --out    scrive l'output su file (default: esami.md)
+  -m, --mesi   range di mesi (default: 12 | non inserito: 4)
 ```
 
 ### Prestazioni
