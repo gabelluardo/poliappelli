@@ -1,3 +1,5 @@
+import re
+
 from os import path
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -19,10 +21,12 @@ ENDC = '\033[0m'
 
 class Scraper:
     def __init__(self, args, user=None, passwd=None):
-        self.esami = list()
         self.user = user
         self.passwd = passwd
         self.args = args
+
+        self.esami = list()
+        self.table = None
 
         print('Execution time depends on your connection, please be patient...')
         self.print_table()
@@ -32,6 +36,10 @@ class Scraper:
 
     def _openurl(self, url):
         return urlopen(url).read()
+
+    def _write_file(self, path_):
+        with open(path_, 'w') as f:
+            f.write('## Esami\n\n'+str(self.table)+'\n')
 
     # def debug(self):
     #     self.print_table('test.html')
@@ -138,7 +146,6 @@ class Scraper:
 
         self.parse_table(path_)
         self.sort(self.esami, order)
-        print()
 
         table = BeautifulTable(
             max_width=200, default_alignment=ALIGN_LEFT)
@@ -153,12 +160,28 @@ class Scraper:
                 materia[6] if materia[6] is not '' else '?',
                 ''])
 
-        if out is None:
-            print(table)
+        self.table = table
+        default = '{}/esami.md'
+
+        if out is not None:
+            # controllo che la destinazione sia una cartella
+            # o un file con una estensione (es: .md, .txt, ecc)
+
+            dest = default.format(re.sub(r'/+$', '', out)) if path.isdir(out) else out
+
+            if path.isfile(dest):
+                answer = input(f'\n\'{dest}\': already exists and will be rewritten.\
+                    \nProceed anyway? [Y/n]: ')
+                if answer not in ('', 'y', 'Y', 'yes', 'Yes', 'YES'):
+                    exit()
+
+            if len(re.findall(r'\..+$', dest)) > 0:
+                self._write_file(dest)
+                print(f'\nTable written in: {dest}\n')
+            else:
+                print(f'\n{RED}{out} is not a valid file or directory{ENDC}\n')
         else:
-            with open(out, 'w') as f:
-                f.write('## Esami\n\n')
-                f.write(str(table))
+            print('\n'+str(table)+'\n')
 
     def sort(self, target, key):
         if key == 'Nome':

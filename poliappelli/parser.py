@@ -29,7 +29,7 @@ parser.add_argument(
     const='Data', type=str, help='ordinamento delle materie (default: Data)',
     choices=['Nome', 'Data', 'Tipo', 'Scadenza'])
 parser.add_argument(
-    '-o', '--out', nargs='?', dest='file', const='esami.md',
+    '-o', '--out', nargs='?', dest='file', const='.',
     type=str, help='scrive l\'output su file (default: esami.md)')
 parser.add_argument(
     '-m', '--mesi', nargs='?', dest='mesi', default=4, const=12,
