@@ -10,5 +10,5 @@ install:
 #	 mv dist/* .
 
 clean:
-	rm -rf __pycache__/ build/ *.spec *.log 
+	rm -rf */__pycache__/ build/ *.spec *.log *.egg-info
 #   rm -rf .venv/ dist/
