@@ -177,9 +177,9 @@ class Scraper:
 
             if len(re.findall(r'\..+$', dest)) > 0:
                 self._write_file(dest)
-                print(f'\nTable written in: {dest}\n')
+                print(f'\nTable written in: {dest}')
             else:
-                print(f'\n{RED}{out} is not a valid file or directory{ENDC}\n')
+                print(f'\n{RED}\'{dest}\': is not a valid file or directory{ENDC}')
         else:
             print('\n'+str(table)+'\n')
 

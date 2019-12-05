@@ -48,7 +48,6 @@ def main():
         # core dello script
         with catch_warnings(record=True):
             Scraper(args, user, passwd)
-            print()
     except KeyboardInterrupt:
         exit()
 

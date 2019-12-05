@@ -46,7 +46,7 @@ optional arguments:
 
 ### Browser supportati
 
-Firefox
+Firefox  
 Chromium (WIP)
 
 ### SO
