@@ -6,8 +6,7 @@ Script per ricordare tutte le date degli appelli del PoliTo
 
 **Richiesti:**
 
--   python3
--   pipenv
+-   [poetry](https://python-poetry.org/)
 -   make
 
 ### Installazione

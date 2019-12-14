@@ -9,6 +9,7 @@ repository="https://gitlab.com/gabelluardo/poliappelli"
 classifiers=[
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: POSIX :: Linux",
     "Topic :: Utilities",
@@ -19,8 +20,8 @@ poliappelli = "poliappelli.__main__:run"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-selenium = "~3.141.0"
 tqdm = "~4.40.0"
+selenium = "~3.141.0"
 beautifulsoup4 = "~4.8.1"
 beautifultable = "~0.8.0"
 
