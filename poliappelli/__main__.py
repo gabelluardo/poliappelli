@@ -36,7 +36,7 @@ def credentials():
     return user, passwd
 
 
-def main():
+def run():
     # per debug
     # if args.debug:
     #     Scraper().debug()
@@ -53,4 +53,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    run()
