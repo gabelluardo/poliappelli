@@ -45,7 +45,7 @@ optional arguments:
 
 ### Browser supportati
 
-Firefox  
+Firefox: [Geckodriver](https://github.com/mozilla/geckodriver) deve essere in PATH  
 Chromium (WIP)
 
 ### SO
@@ -56,8 +56,6 @@ Windows (non testato)
 ### Licenza
 
 GNU GPL3  
-[Geckodriver](https://github.com/mozilla/geckodriver) è software Mozilla sotto MPL
-
 
 --- 
 
