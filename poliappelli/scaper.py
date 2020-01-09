@@ -64,7 +64,7 @@ class Scraper:
                 service_log_path='/dev/null'
             )
         except WebDriverException:
-            print('{RED}ERROR: geckodriver executable needs to be in PATH or in the current folder{ENDC}')
+            print(f'{RED}ERROR: geckodriver executable needs to be in PATH or in the current folder{ENDC}')
             exit(1)
 
         driver.get('https://idp.polito.it/idp/x509mixed-login')
