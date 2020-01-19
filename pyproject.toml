@@ -20,15 +20,15 @@ poliappelli = "poliappelli.__main__:run"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-tqdm = "~4.40.0"
-selenium = "~3.141.0"
-beautifulsoup4 = "~4.8.1"
-beautifultable = "~0.8.0"
+tqdm = "^4.40.0"
+selenium = "^3.141.0"
+beautifulsoup4 = "^4.8.1"
+beautifultable = "^0.8.0"
 
 [tool.poetry.dev-dependencies]
-pylint = "*"
-autopep8 = "*"
-PyInstaller = "~3.5"
+pylint = "^2.4.4"
+autopep8 = "^1.4.4"
+PyInstaller = "^3.5"
 
 [build-system]
 requires = ["poetry>=1.0.0"]
