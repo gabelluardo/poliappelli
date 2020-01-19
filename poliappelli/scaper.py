@@ -12,7 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, TimeoutException
 
 # costanti messaggio errore
 RED = '\033[91m'
@@ -21,8 +21,9 @@ ENDC = '\033[0m'
 
 class Scraper:
     def __init__(self, args, user=None, passwd=None):
-        self.user = user
-        self.passwd = passwd
+        self._user = user
+        self._passwd = passwd
+        self._driver = self._init_browser()
         self.args = args
 
         self.esami = list()
@@ -31,28 +32,15 @@ class Scraper:
         print('Execution time depends on your connection, please be patient...')
         self.print_table()
 
-    def _openfile(self, path):
-        return urlopen('file:' + path).read()
+    @property
+    def user(self):
+        return self._user
 
-    def _openurl(self, url):
-        return urlopen(url).read()
+    @property
+    def passwd(self):
+        return self._passwd
 
-    def _write_file(self, path_):
-        with open(path_, 'w') as f:
-            f.write('## Esami\n\n'+str(self.table)+'\n')
-
-    # def debug(self):
-    #     self.print_table('test.html')
-
-    def find_table(self):
-        # apre il browser Firefox per
-        # accedere alla pagina del polito
-        # e recuperare l'url termporaneo della
-        # pagina degli appelli
-
-        pbar = tqdm(total=100, desc='Scraping')
-
-        # opzione per nascondere la finestra del browser
+    def _init_browser(self):
         opt = Options()
         opt.headless = True
         gecko = path.realpath('geckodriver') if path.exists('geckodriver') else 'geckodriver'
@@ -67,6 +55,36 @@ class Scraper:
             print(f'{RED}ERROR: geckodriver executable needs to be in PATH or in the current folder{ENDC}')
             exit(1)
 
+        return driver
+
+    def _openfile(self, path):
+        return urlopen('file:' + path).read()
+
+    def _openurl(self, url):
+        return urlopen(url).read()
+
+    def _write_file(self, path_):
+        with open(path_, 'w') as f:
+            f.write('## Esami\n\n'+str(self.table)+'\n')
+
+    def _wait_and_click(self, text, timer=20):
+        WebDriverWait(self._driver, timer).until(EC.presence_of_element_located(
+            (By.LINK_TEXT, text)))
+        self._driver.find_element_by_link_text(text).click()
+
+    # def debug(self):
+    #     self.print_table('test.html')
+
+    def find_table(self):
+        # apre il browser Firefox per
+        # accedere alla pagina del polito
+        # e recuperare l'url termporaneo della
+        # pagina degli appelli
+
+        driver = self._driver
+
+        pbar = tqdm(total=100, desc='Scraping')
+
         driver.get('https://idp.polito.it/idp/x509mixed-login')
 
         # TODO: caso di credenziali sbagliate
@@ -80,19 +98,19 @@ class Scraper:
 
         pbar.update(25)
 
-        # TODO: chiudere eventuali popup
-
-        # TODO: caso di credenziali sbagliate
-        WebDriverWait(driver, 20).until(EC.presence_of_element_located(
-            (By.LINK_TEXT, 'Portale della Didattica')))
-        driver.find_element_by_link_text('Portale della Didattica').click()
+        try:
+            self._wait_and_click('Portale della Didattica', 10)
+        except TimeoutException:
+            # prosegue se viene chiesto un cambio password
+            driver.find_element_by_id('nocontinua').click()
+        finally:
+            self._wait_and_click('Portale della Didattica', 10)
 
         pbar.update(25)
 
+        # TODO: chiudere eventuali popup
         # TODO: pagina non caricata
-        WebDriverWait(driver, 20).until(EC.presence_of_element_located(
-            (By.LINK_TEXT, 'Consultazione e prenotazione esami')))
-        driver.find_element_by_link_text('Consultazione e prenotazione esami').click()
+        self._wait_and_click('Consultazione e prenotazione esami')
 
         pbar.update(25)
 
@@ -155,9 +173,9 @@ class Scraper:
         for materia in self.esami:
             table.append_row([
                 materia[1],
-                materia[2] if materia[2] is not '' else '?',
+                materia[2] if materia[2] != '' else '?',
                 materia[4],
-                materia[6] if materia[6] is not '' else '?',
+                materia[6] if materia[6] != '' else '?',
                 ''])
 
         self.table = table
@@ -190,9 +208,9 @@ class Scraper:
             target.sort(key=lambda materia: materia[4])
         elif key == 'Scadenza':
             target.sort(key=lambda materia: dt.strptime(
-                materia[6], '%d-%m-%Y %H:%M') if materia[6] is not ''
+                materia[6], '%d-%m-%Y %H:%M') if materia[6] != ''
                 else dt.strptime(materia[2], ''))
         else:
             target.sort(key=lambda materia: dt.strptime(
-                materia[2], '%d-%m-%Y %H:%M') if materia[2] is not ''
+                materia[2], '%d-%m-%Y %H:%M') if materia[2] != ''
                 else dt.strptime(materia[2], ''))
