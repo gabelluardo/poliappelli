@@ -1,10 +1,12 @@
 import re
+import sys
 
 from os import path
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from datetime import datetime as dt
+from poliappelli import resource_path
 from beautifultable import BeautifulTable, ALIGN_LEFT, STYLE_MARKDOWN
 
 from selenium.webdriver import Firefox
@@ -24,8 +26,8 @@ class Scraper:
         self._user = user
         self._passwd = passwd
         self._driver = self._init_browser()
-        self.args = args
 
+        self.args = args
         self.esami = list()
         self.table = None
 
@@ -43,7 +45,8 @@ class Scraper:
     def _init_browser(self):
         opt = Options()
         opt.headless = True
-        gecko = path.realpath('geckodriver') if path.exists('geckodriver') else 'geckodriver'
+
+        gecko = resource_path('./driver/geckodriver')
 
         try:
             driver = Firefox(
@@ -53,7 +56,7 @@ class Scraper:
             )
         except WebDriverException:
             print(f'{RED}ERROR: geckodriver executable needs to be in PATH or in the current folder{ENDC}')
-            exit(1)
+            sys.exit(1)
 
         return driver
 
