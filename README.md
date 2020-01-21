@@ -7,13 +7,12 @@ Script per ricordare tutte le date degli appelli del PoliTo
 **Richiesti:**
 
 -   [poetry](https://python-poetry.org/)
--   make
 
 ### Installazione
 
     git clone --depth 1 https://gitlab.com/gabelluardo/poliappelli 
     cd poliappelli
-    make
+    python3 install.py
 
 Poi sposta `dist/poliappelli` da qualche parte nel tuo `$PATH`
 
