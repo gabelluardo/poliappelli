@@ -2,10 +2,18 @@ import os
 import sys
 import glob
 import shutil
+import platform
 import subprocess
 
+from poliappelli import __version__
+
 MAIN = 'poliappelli/__main__.py'
-URL = 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz'
+BINARY_NAME = f'poliappelli-{__version__}-{platform.system().lower()}{platform.architecture()[0][:2]}'
+URL = {
+    'Windows': 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-win64.zip',
+    'Darwin': 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-macos.tar.gz',
+    'Linux': 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz',
+}
 TRASH = [
     '*/__pycache__/',
     'build/',
@@ -25,15 +33,29 @@ def shell(cmd):
         pass
 
 
-def install():
+def driver(systems=None):
     if not os.path.exists('driver'):
         os.mkdir('driver')
 
-    shell(f'curl -L {URL} | tar zxv -C driver')
+    urls = URL.values() if systems else [URL[platform.system()]]
 
+    for url in urls:
+        if url[-3:] == 'zip':
+            filename = url.split('/')[-1][:-4]
+            unzip = f'gzip -dc > driver/{filename}'
+        else:
+            filename = url.split('/')[-1][:-7]
+            unzip = f'tar zxv --transform "s|.*|{filename}|" -C driver'
+
+        shell(f'curl -LZ {url} | {unzip} && chmod +x driver/*')
+
+
+def install(systems):
+    driver(systems)
     shell('poetry install --no-root')
-    shell(f'poetry run pyinstaller {MAIN} -n poliappelli\
-         --onefile --add-binary "./driver/geckodriver:./driver" --add-data "pyproject.toml:."')
+    shell(f'poetry run pyinstaller {MAIN} --onefile --noconsole -n {BINARY_NAME}\
+         --add-binary "driver/geckodriver*:driver"\
+         --add-data "pyproject.toml:."')
 
 
 def clean():
@@ -46,5 +68,11 @@ def clean():
 
 
 if __name__ == '__main__':
-    install()
-    clean()
+    if len(sys.argv) < 2:
+        sys.argv.append(None)
+
+    if sys.argv[1] == 'driver':
+        driver()
+    else:
+        install(True if sys.argv[1] == 'all' else None)
+        clean()
