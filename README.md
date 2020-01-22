@@ -47,7 +47,7 @@ optional arguments:
 
 ### Prestazioni
 
-~7 secondi a 149.32 Mbit/s
+~7 secondi a 149.32 Mbit/s  
 ~10 secondi a 0.34 Mbit/s
 
 ### Browser supportati
