@@ -1,7 +1,7 @@
 import re
 import sys
-from os import path
 
+from os import path
 
 def resource_path(relative_path):
     try:

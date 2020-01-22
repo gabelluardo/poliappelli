@@ -6,7 +6,7 @@ from warnings import catch_warnings
 
 from poliappelli.parser import args
 from poliappelli.scaper import Scraper
-
+from poliappelli.drivers import drivers
 
 curr_dir = path.dirname(path.realpath(__file__))
 login_file = 'poliappelli.txt' if system() == 'Windows' else '.poliappelli'
@@ -41,6 +41,8 @@ def run():
     # if args.debug:
     #     Scraper().debug()
     #     exit()
+    
+    drivers()
 
     try:
         user, passwd = credentials()

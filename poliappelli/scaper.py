@@ -1,13 +1,15 @@
 import re
 import sys
+import platform
 
 from os import path
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from datetime import datetime as dt
-from poliappelli import resource_path
 from beautifultable import BeautifulTable, ALIGN_LEFT, STYLE_MARKDOWN
+
+from poliappelli.drivers import GECKODRIVERS
 
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.ui import WebDriverWait
@@ -46,7 +48,7 @@ class Scraper:
         opt = Options()
         opt.headless = True
 
-        gecko = resource_path('./driver/geckodriver')
+        gecko = GECKODRIVERS[platform.system()]
 
         try:
             driver = Firefox(

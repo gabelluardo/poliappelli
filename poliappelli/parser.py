@@ -1,5 +1,5 @@
-from argparse import ArgumentParser, HelpFormatter
 from poliappelli import __version__
+from argparse import ArgumentParser, HelpFormatter
 
 
 class CustomHelpFormatter(HelpFormatter):
