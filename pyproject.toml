@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "poliappelli"
-version = "0.8.0"
+version = "0.9.0"
 description="Script for PoliTo exams"
 authors=["Gabriele Belluardo <gabriele.belluardo@outlook.it>"]
 readme="README.md"
