@@ -14,12 +14,19 @@ Script per ricordare tutte le date degli appelli del PoliTo
     cd poliappelli
     python3 install.py
 
-Poi sposta `dist/poliappelli` da qualche parte nel tuo `$PATH`
+Poi sposta `dist/poliappelli` da qualche parte nel tuo `$PATH`, ad esempio:
 
     cd dist/
-    mv poliappelli ~/.local/bin
+    mv poliappelli-xxx-linux64 ~/.local/bin/poliappelli
 
 ### Uso
+
+Con poetry:
+
+```
+python3 install.py driver
+poetry run poliappelli
+```
 
 Verrà chiesto di salvare le credenziali in `.login`, per aggiornale: `poliappelli -l`
 
@@ -40,17 +47,19 @@ optional arguments:
 
 ### Prestazioni
 
-~10 secondi
+~7 secondi a 149.32 Mbit/s
+~10 secondi a 0.34 Mbit/s
 
 ### Browser supportati
 
-Firefox: [Geckodriver](https://github.com/mozilla/geckodriver) deve essere in PATH  
+Firefox: usando [Geckodriver](https://github.com/mozilla/geckodriver)  
 Chromium (WIP)
 
 ### SO
 
 Linux  
 Windows (non testato)
+MacOS (non testato)
 
 ### Licenza
 
