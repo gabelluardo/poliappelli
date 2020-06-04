@@ -41,18 +41,13 @@ def run():
     # if args.debug:
     #     Scraper().debug()
     #     exit()
-    
+
     drivers()
 
     try:
         user, passwd = credentials()
 
-        # core dello script
         with catch_warnings(record=True):
-            Scraper(args, user, passwd)
+            Scraper(args, user, passwd).run()
     except KeyboardInterrupt:
         exit()
-
-
-if __name__ == '__main__':
-    run()

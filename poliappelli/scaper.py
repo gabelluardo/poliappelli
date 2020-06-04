@@ -27,22 +27,13 @@ class Scraper:
     def __init__(self, args, user=None, passwd=None):
         self._user = user
         self._passwd = passwd
+        self._root_url = 'https://idp.polito.it/idp/x509mixed-login'
+
         self._driver = self._init_browser()
 
         self.args = args
-        self.esami = list()
+        self.esami = []
         self.table = None
-
-        print('Execution time depends on your connection, please be patient...')
-        self.print_table()
-
-    @property
-    def user(self):
-        return self._user
-
-    @property
-    def passwd(self):
-        return self._passwd
 
     def _init_browser(self):
         opt = Options()
@@ -62,12 +53,6 @@ class Scraper:
 
         return driver
 
-    def _openfile(self, path):
-        return urlopen('file:' + path).read()
-
-    def _openurl(self, url):
-        return urlopen(url).read()
-
     def _write_file(self, path_):
         with open(path_, 'w') as f:
             f.write('## Esami\n\n'+str(self.table)+'\n')
@@ -80,7 +65,7 @@ class Scraper:
     # def debug(self):
     #     self.print_table('test.html')
 
-    def find_table(self):
+    def find_url(self):
         # apre il browser Firefox per
         # accedere alla pagina del polito
         # e recuperare l'url termporaneo della
@@ -90,15 +75,15 @@ class Scraper:
 
         pbar = tqdm(total=100, desc='Scraping')
 
-        driver.get('https://idp.polito.it/idp/x509mixed-login')
+        driver.get(self._root_url)
 
         # TODO: caso di credenziali sbagliate
 
         # login al portale della didattica
         userElement = driver.find_element_by_id('j_username')
         passElement = driver.find_element_by_id('j_password')
-        userElement.send_keys(self.user)
-        passElement.send_keys(self.passwd)
+        userElement.send_keys(self._user)
+        passElement.send_keys(self._passwd)
         userElement.submit()
 
         pbar.update(25)
@@ -108,8 +93,8 @@ class Scraper:
         except TimeoutException:
             # prosegue se viene chiesto un cambio password
             driver.find_element_by_id('nocontinua').click()
-        finally:
             self._wait_and_click('Portale della Didattica', 10)
+        # finally:
 
         pbar.update(25)
 
@@ -138,16 +123,15 @@ class Scraper:
 
         return url
 
-    def parse_table(self, path_, tag='table'):
+    def parse_table(self, path, tag='table'):
         # parsifica tutte le table che trova
         # nella pagina/file html e ne salva
         # i campi nella lista self.esami
         # ordinati per data dell'esame
 
-        target = self._openfile(
-            path_) if path_ is not None else self._openurl(self.find_table())
+        target = urlopen(path).read()
 
-        prec = list()
+        prec = []
         for table in BeautifulSoup(target, 'html.parser').find_all(tag):
             for tr in table.find_all('tr'):
                 row = [cell.text.strip() for cell in tr.find_all('td')]
@@ -159,19 +143,23 @@ class Scraper:
                     prec = row
                     self.esami.append(row)
 
-    def print_table(self, path_=None):
+    def run(self):
         # crea una tabella (in sintassi markdown)
         # della lista esami che verra'
         # ordinata secondo il parametro order
         # stampata su terminale oppure su file
+
+        print('Execution time depends on your connection, please be patient...')
+
         out = self.args.file
         order = self.args.order
 
-        self.parse_table(path_)
+        url = self.find_url()
+
+        self.parse_table(url)
         self.sort(self.esami, order)
 
-        table = BeautifulTable(
-            max_width=200, default_alignment=ALIGN_LEFT)
+        table = BeautifulTable(max_width=200, default_alignment=ALIGN_LEFT)
         table.set_style(STYLE_MARKDOWN)
         table.column_headers = ['Nome', 'Data', 'Tipo', 'Scadenza', 'Aula']
 

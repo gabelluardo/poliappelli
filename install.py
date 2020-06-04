@@ -7,12 +7,15 @@ import subprocess
 
 from poliappelli import __version__
 
+
 MAIN = 'poliappelli/__main__.py'
 BINARY_NAME = f'poliappelli-{__version__}-{platform.system().lower()}{platform.architecture()[0][:2]}'
+
+DRIVER_VERSION = 'v0.26.0'
 URL = {
-    'Windows': 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-win64.zip',
-    'Darwin': 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-macos.tar.gz',
-    'Linux': 'https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz',
+    'Windows': f'https://github.com/mozilla/geckodriver/releases/download/{DRIVER_VERSION}/geckodriver-{DRIVER_VERSION}-win64.zip',
+    'Darwin': f'https://github.com/mozilla/geckodriver/releases/download/{DRIVER_VERSION}/geckodriver-{DRIVER_VERSION}-macos.tar.gz',
+    'Linux': f'https://github.com/mozilla/geckodriver/releases/download/{DRIVER_VERSION}/geckodriver-{DRIVER_VERSION}-linux64.tar.gz',
 }
 TRASH = [
     '*/__pycache__/',
