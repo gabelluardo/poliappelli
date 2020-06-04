@@ -70,7 +70,7 @@ def clean():
                 shutil.rmtree(file)
 
 
-if __name__ == '__main__':
+def run():
     if len(sys.argv) < 2:
         sys.argv.append(None)
 
@@ -79,3 +79,7 @@ if __name__ == '__main__':
     else:
         install(True if sys.argv[1] == 'all' else None)
         clean()
+
+
+if __name__ == '__main__':
+    run()

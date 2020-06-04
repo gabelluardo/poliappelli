@@ -36,7 +36,7 @@ def credentials():
     return user, passwd
 
 
-def run():
+def main():
     # per debug
     # if args.debug:
     #     Scraper().debug()
@@ -51,3 +51,7 @@ def run():
             Scraper(args, user, passwd).run()
     except KeyboardInterrupt:
         exit()
+
+# lasciare per essere eseguito da binario
+if __name__ == '__main__':
+    main()
