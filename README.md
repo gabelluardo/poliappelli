@@ -45,6 +45,6 @@ GNU GPL3
 *   [x] navigazione web: inserimento di solo user e password per accedere al portale polito
 *   [x] visualizzazione da terminale
 *   [ ] flag da shell
-*   [ ] aggiungere progressbar
+*   [x] aggiungere progressbar
 *   [ ] salvataggio credenziali
 *   [ ] scrivere i test
