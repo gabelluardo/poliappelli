@@ -1,4 +1,4 @@
-import { puppeteer, Spinner } from "./deps.ts";
+import { puppeteer, wait } from "./deps.ts";
 
 // deno-fmt-ignore
 const EXAM_URL = "https://didattica.polito.it/pls/portal30/sviluppo.reg_esami.stugoux2";
@@ -50,11 +50,20 @@ class Esame {
       this.prenotati,
     ];
   }
+
+  expireDate(): number {
+    const [d, m, y] = this.scadenza.split("-").map((e) => parseInt(e));
+    return new Date(y, m, d).getTime();
+  }
+
+  examDate(): number {
+    const [d, m, y] = this.data.split("-").map((e) => parseInt(e));
+    return new Date(y, m, d).getTime();
+  }
 }
 
 export async function scrape(options: any) {
-  const spinner = Spinner.getInstance();
-  await spinner.start("Scraping website");
+  const spinner = wait("Start scraping").start();
 
   const browser = await puppeteer.launch({
     headless: true,
@@ -66,16 +75,22 @@ export async function scrape(options: any) {
   await page.type("#j_password", options.password);
   await page.keyboard.press("Enter");
 
+  spinner.text = "Insert credentials";
+
   await page.waitForNavigation();
   await page.goto(EXAM_URL);
   await page.waitForNavigation();
+
+  spinner.text = "Parse exams page";
 
   const data = await page.$$eval<string[]>(
     "tbody > tr > td",
     (tds) => tds.map((td) => td.innerText.trim()),
   );
   await browser.close();
-  await spinner.succeed("Scraping completed");
+
+  spinner.succeed("Scraping completed");
+  //spinner.stop();
 
   // varibales for results
   const exams: Esame[] = [];
@@ -100,5 +115,5 @@ export async function scrape(options: any) {
     }
   });
 
-  return exams;
+  return exams.sort((a, b) => a.expireDate() - b.expireDate());
 }
