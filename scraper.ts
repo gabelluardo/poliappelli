@@ -62,7 +62,7 @@ class Esame {
   }
 }
 
-export async function scrape(options: any) {
+export async function scrape(user: string, pass: string) {
   const spinner = wait("Start scraping").start();
 
   const browser = await puppeteer.launch({
@@ -71,8 +71,8 @@ export async function scrape(options: any) {
   });
   const page = await browser.newPage();
   await page.goto(MAIN_URL, { waitUntil: "load" });
-  await page.type("#j_username", options.username);
-  await page.type("#j_password", options.password);
+  await page.type("#j_username", user);
+  await page.type("#j_password", pass);
   await page.keyboard.press("Enter");
 
   spinner.text = "Insert credentials";
@@ -115,5 +115,5 @@ export async function scrape(options: any) {
     }
   });
 
-  return exams.sort((a, b) => a.expireDate() - b.expireDate());
+  return exams;
 }

@@ -16,7 +16,9 @@ const { options } = await new Command()
 
 // TODO: Prompt input username and password
 
-const list = await scrape(options);
+const list = await scrape(options.username, options.password);
+
+list.sort((a, b) => a.expireDate() - b.expireDate());
 
 new Table()
   .header(list[0].keys())

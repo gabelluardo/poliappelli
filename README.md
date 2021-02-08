@@ -39,7 +39,7 @@ GNU GPL3
 
 ### TODO
 
-*   [ ] beautify output markdown
+*   [x] beautify output markdown
 *   [ ] ordine di data/alfabetico
     -   [ ] ordine inverso
 *   [x] navigazione web: inserimento di solo user e password per accedere al portale polito
