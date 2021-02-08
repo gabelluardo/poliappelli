@@ -1,4 +1,4 @@
-import { Command } from "./deps.ts";
+import { Command, Table } from "./deps.ts";
 import { scrape } from "./scraper.ts";
 
 // args parser
@@ -14,6 +14,14 @@ const { options } = await new Command()
   })
   .parse(Deno.args);
 
-// main
-const e = await scrape(options);
-console.log(e);
+// TODO: Prompt input username and password
+
+const list = await scrape(options);
+
+new Table()
+  .header(list[0].keys())
+  .body(list.map((e) => e.values()))
+  .maxColWidth(15)
+  .padding(1)
+  .border(true)
+  .render();

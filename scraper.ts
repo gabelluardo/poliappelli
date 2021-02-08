@@ -24,6 +24,32 @@ class Esame {
     this.scadenza = ary[6];
     this.prenotati = ary[7];
   }
+
+  keys(): string[] {
+    return [
+      "Codice",
+      "Materia",
+      "Data",
+      // "Aula",
+      // "Tipo",
+      "Insegnante",
+      "Scadenza",
+      "Prenotati",
+    ];
+  }
+
+  values(): string[] {
+    return [
+      this.codice,
+      this.materia,
+      this.data,
+      // this.aula,
+      // this.tipo,
+      this.insegnante,
+      this.scadenza,
+      this.prenotati,
+    ];
+  }
 }
 
 export async function scrape(options: any) {
