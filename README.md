@@ -33,18 +33,21 @@ optional arguments:
 
 ### Licenza
 
-GNU GPL3  
+GNU GPL3
 
---- 
+---
 
 ### TODO
 
-*   [x] beautify output markdown
-*   [ ] ordine di data/alfabetico
-    -   [ ] ordine inverso
-*   [x] navigazione web: inserimento di solo user e password per accedere al portale polito
-*   [x] visualizzazione da terminale
-*   [ ] flag da shell
-*   [x] aggiungere progressbar
-*   [ ] salvataggio credenziali
-*   [ ] scrivere i test
+* [x] beautify output markdown
+* [ ] ordine di data/alfabetico
+  + [ ] ordine inverso
+* [x] navigazione web: inserimento di solo user e password per accedere al
+
+  portale polito
+
+* [x] visualizzazione da terminale
+* [ ] flag da shell
+* [x] aggiungere progressbar
+* [ ] salvataggio credenziali
+* [ ] scrivere i test

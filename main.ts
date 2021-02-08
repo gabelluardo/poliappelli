@@ -6,10 +6,10 @@ const { options } = await new Command()
   .name("poliappelli")
   .version("0.1.0")
   .description("Script per le date degli appelli del PoliTo")
-  .option("-u, --username [username:string];", "Login username", {
+  .option("-u, --username [username:string]", "Login username", {
     default: Deno.env.get("USERNAME"),
   })
-  .option("-p, --password [password:string];", "Login password", {
+  .option("-p, --password [password:string]", "Login password", {
     default: Deno.env.get("PASSWORD"),
   })
   .parse(Deno.args);
