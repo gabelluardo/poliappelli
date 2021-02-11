@@ -17,3 +17,6 @@ scripts:
     lock: lock.json
     noCheck: true
     unstable: true
+  dev:
+    cmd: main.ts
+    unstable: true
