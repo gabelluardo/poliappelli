@@ -15,4 +15,5 @@ scripts:
     desc: Runs the script
     cmd: main.ts
     lock: lock.json
+    noCheck: true
     unstable: true

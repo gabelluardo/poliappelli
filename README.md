@@ -19,16 +19,19 @@ Oppure compilare in un binario eseguibile:
     deno compile -A --unstable main.ts
 
 ``` 
-> poliappelli -h
+Usage:   poliappelli
+Version: v0.1.0     
 
-usage: poliappelli [-h] [-l [LOGIN]] [-s [{Nome,Data,Tipo,Scadenza}]] [-o [FILE]] [-m [MESI]]
+Description:
 
-optional arguments:
-  -h, --help   show this help message and exit
-  -l, --login  riscrivere le credenziali nel file .poliappelli
-  -s, --sort   ordinamento delle materie (default: Data)
-  -o, --out    scrive l'output su file (default: esami.md)
-  -m, --mesi   range di mesi (default: 12 | non inserito: 4)
+  Script per le date degli appelli del PoliTo
+
+Options:
+
+  -h, --help                  - Show this help.
+  -V, --version               - Show the version number for this program.
+  -u, --username  [username]  - Login username
+  -p, --password  [password]  - Login password
 ```
 
 ### Licenza
@@ -41,13 +44,8 @@ GNU GPL3
 
 * [x] beautify output markdown
 * [ ] ordine di data/alfabetico
-  + [ ] ordine inverso
-* [x] navigazione web: inserimento di solo user e password per accedere al
-
-  portale polito
-
+* [x] navigazione web: inserimento di solo user e password per accedere al  portale polito
 * [x] visualizzazione da terminale
-* [ ] flag da shell
 * [x] aggiungere progressbar
 * [ ] salvataggio credenziali
-* [ ] scrivere i test
+* [ ] export su file
