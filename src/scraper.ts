@@ -1,4 +1,4 @@
-import { puppeteer, wait } from "./deps.ts";
+import { puppeteer, wait } from "../deps.ts";
 
 // deno-fmt-ignore
 const EXAM_URL = "https://didattica.polito.it/pls/portal30/sviluppo.reg_esami.stugoux2";

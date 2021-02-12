@@ -1,7 +1,4 @@
-name: poliappelli
-version: 0.1.0
-description: Script per le date degli appelli del PoliTo
-repository: "https://gitlab.com/gabelluardo/poliappelli/"
+unstable: true
 
 allow:
   - env
@@ -11,12 +8,11 @@ allow:
   - write
 
 scripts:
+  dev:
+    cmd: cli.ts
+
   start:
     desc: Runs the script
-    cmd: main.ts
+    cmd: cli.ts
     lock: lock.json
     noCheck: true
-    unstable: true
-  dev:
-    cmd: main.ts
-    unstable: true
