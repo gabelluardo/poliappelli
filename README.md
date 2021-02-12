@@ -12,15 +12,19 @@ Installare l'eseguibile pupperteer con:
 
 Eseguire lo script con:
 
-    deno run -A --unstable main.ts
+    deno run -A --unstable https://raw.githubusercontent.com/gabelluardo/poliappelli/deno/cli.ts
 
-Oppure compilare in un binario eseguibile:
+Oppure installare come script deno:
 
-    deno compile -A --unstable main.ts
+    deno install -A --unstable https://raw.githubusercontent.com/gabelluardo/poliappelli/deno/cli.ts
+
+Oppure compilare in un binario eseguibile (questa funzione è ancora [sperimentale](https://deno.land/manual/tools/compiler)):
+
+    deno compile -A --unstable https://raw.githubusercontent.com/gabelluardo/poliappelli/deno/cli.ts
 
 ``` 
 Usage:   poliappelli
-Version: v0.1.0     
+Version: v0.10.0     
 
 Description:
 
