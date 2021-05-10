@@ -295,5 +295,9 @@
   "https://raw.githubusercontent.com/gabelluardo/kia/master/kia.ts": "c601d1f39202c12fafcaff718f3213875e37a4951e75b25409590b148854bb15",
   "https://raw.githubusercontent.com/gabelluardo/kia/master/mod.ts": "998eb740e3e093bdad76e6c8557e8eb034ee4565ca6436c0c6d18d4bbddeb670",
   "https://raw.githubusercontent.com/gabelluardo/kia/master/spinners.ts": "9a4441c1dc63f1349f302218d1197a603549abc6bd91ee80afbb63a9759511a3",
-  "https://raw.githubusercontent.com/gabelluardo/kia/master/util.ts": "4240c88fbb1dc112ab8e5d8e9c4667321d651e25ccf4034a1aebc79ea8452d6d"
+  "https://raw.githubusercontent.com/gabelluardo/kia/master/util.ts": "4240c88fbb1dc112ab8e5d8e9c4667321d651e25ccf4034a1aebc79ea8452d6d",
+  "https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts": "d23ecc3a0b418719e952f0586d33f46e91cb96162f25ccfda987d8a40bbf353b",
+  "https://raw.githubusercontent.com/gabelluardo/poliappelli/main/src/main.ts": "c5897ad1f5c444618b880e6b0d3f2c81ab5061ca04190901cca6df6a5d09317a",
+  "https://raw.githubusercontent.com/gabelluardo/poliappelli/main/src/scraper.ts": "73414e991a01e9d4d3079c14ad5b83f8fc1e097b12dc927c4220c61f6c041f59",
+  "https://raw.githubusercontent.com/gabelluardo/poliappelli/main/src/version.ts": "655f09054c579267c5836e266dea5fc64b6d6c237c77421767d6f47f931059b1"
 }

@@ -8,15 +8,15 @@ Necessario installare [deno](https://deno.land/#installation) per eseguire lo sc
 
 Eseguire lo script con:
 
-    deno run -A --unstable --lock=lock.json https://raw.githubusercontent.com/gabelluardo/poliappelli/cli.ts
+    deno run -A --unstable --lock=lock.json -fn poliappelli --import-map=import_map.json https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
 
 Oppure installare come script deno:
 
-    deno install -A --unstable --lock=lock.json -n poliappelli https://raw.githubusercontent.com/gabelluardo/poliappelli/cli.ts
+    deno install -A --unstable --lock=lock.json -fn poliappelli --import-map=import_map.json https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
 
 Oppure compilare in un binario eseguibile (questa funzione è ancora [sperimentale](https://deno.land/manual/tools/compiler)):
 
-    deno compile -A --unstable --lock=lock.json -o poliappelli https://raw.githubusercontent.com/gabelluardo/poliappelli/cli.ts
+    deno compile -A --unstable --lock=lock.json -o poliappelli --import-map=import_map.json https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
 
 Potrebbe essere necessario installare l'eseguibile pupperteer con:
 
@@ -56,6 +56,7 @@ Environment variables:
 
 ```
 
-## Licenza
+## Author
 
-[AGPL3](https://github.com/gabelluardo/poliappelli/blob/master/LICENSE)
+**poliappelli** © [gabelluardo](https://github.com/gabelluardo)  
+Released under the [AGPL3](https://github.com/gabelluardo/poliappelli/blob/master/LICENSE) License.
