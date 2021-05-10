@@ -1,0 +1,10 @@
+{
+    "imports": {
+        "command": "https://deno.land/x/cliffy@v0.18.2/command/mod.ts",
+        "fs": "https://deno.land/std@0.95.0/fs/mod.ts",
+        "kia": "https://raw.githubusercontent.com/gabelluardo/kia/master/mod.ts",
+        "puppeteer": "https://deno.land/x/puppeteer@9.0.0/mod.ts",
+        "testing/": "https://deno.land/std@0.95.0/testing/",
+        "table": "https://deno.land/x/cliffy@v0.18.2/table/mod.ts"
+    }
+}
