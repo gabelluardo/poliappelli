@@ -17,8 +17,7 @@ export class PoliCommand extends Command {
   constructor() {
     super();
 
-    this
-      .name("poliappelli")
+    this.name("poliappelli")
       .version(VERSION)
       .description("Script per le date degli appelli del PoliTo")
       .allowEmpty(false)
@@ -43,7 +42,7 @@ export class PoliCommand extends Command {
           typeof value === "boolean" ? "esami.txt" : value,
       )
       .option("-s, --sort", "Reversed sort by date")
-      .action(async (options) => await run(options))
+      .action((options) => run(options))
       .command("completions", new CompletionsCommand())
       .reset();
   }

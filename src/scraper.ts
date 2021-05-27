@@ -10,6 +10,8 @@ export const header = [
   "Codice",
   "Materia",
   "Data",
+  "Sede",
+  "Tipo",
   "Insegnante",
   "Scadenza",
   "Prenotati",
@@ -20,7 +22,7 @@ interface Exam {
   codice: string;
   materia: string;
   data: string;
-  aula: string;
+  sede: string;
   tipo: string;
   insegnante: string;
   scadenza: string;
@@ -35,8 +37,8 @@ class Exam {
       this.codice,
       this.materia,
       this.data,
-      ,
-      ,
+      this.sede,
+      this.tipo,
       this.insegnante,
       this.scadenza,
       this.prenotati,
@@ -52,19 +54,24 @@ class Exam {
     const [d, m, y] = this.data.split("-").map((e) => parseInt(e));
     return new Date(y, m, d).getTime();
   }
+
+  static from(str: string[]): Exam {
+    return new Exam(str);
+  }
 }
 
-function purgeData(data: string): Exam[] {
-  const dd = data.split(",");
-  const d = new Array(Math.ceil(dd.length / 10)).fill([])
-    .map((_) => dd.splice(0, 10))
-    .map((e) => new Exam(e));
+function purgeData(str: string): Exam[] {
+  const rawData = str.split(",").filter((s) => s != "");
+  const data = new Array(Math.ceil(rawData.length / 8))
+    .fill([])
+    .map((_) => rawData.splice(0, 8))
+    .map((e) => Exam.from(e));
 
-  const exams = d.map((e, id) => {
+  const exams = data.map((e, id) => {
     if (e.codice === "" || e.materia === "") {
-      e.raw = d[id - 1].raw;
-      e.codice = d[id - 1].codice;
-      e.materia = d[id - 1].materia;
+      e.raw = data[id - 1].raw;
+      e.codice = data[id - 1].codice;
+      e.materia = data[id - 1].materia;
     }
     return e;
   });
@@ -99,13 +106,13 @@ export async function scrape(user: string, pass: string) {
   await page.type("#j_password", pass);
   await page.keyboard.press("Enter");
 
-  spinner.set("Insert credentials");
+  spinner.set("Inserting credentials");
 
   await page.waitForNavigation();
   await page.goto(EXAM_URL);
   await page.waitForNavigation();
 
-  spinner.set("Parse exams page");
+  spinner.set("Parsing exams page");
 
   const data = await page.$$eval<string[]>(
     "tbody > tr > td",

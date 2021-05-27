@@ -1,7 +1,11 @@
 unstable: true
 
 allow:
-  - all
+  - env
+  - read
+  - write
+  - run
+  - net
 
 imap: import_map.json
 
@@ -23,13 +27,13 @@ scripts:
 
   compile:
     desc: Compile the script
-    cmd: deno compile --unstable --lite -A --import-map=import_map.json cli.ts
+    cmd: deno compile --unstable -A --import-map=import_map.json cli.ts
     lock: lock.json
     noCheck: true
 
   compile_win:
     desc: Compile the script
-    cmd: deno compile --unstable --lite --target x86_64-pc-windows-msvc -A --import-map=import_map.json cli.ts
+    cmd: deno compile --unstable --target x86_64-pc-windows-msvc -A --import-map=import_map.json cli.ts
     lock: lock.json
     noCheck: true
 

@@ -2,6 +2,8 @@
 
 Script per le date degli appelli del PoliTo
 
+[![vr scripts](https://badges.velociraptor.run/flat.svg)](https://velociraptor.run)
+
 ## Uso
 
 Necessario installare [deno](https://deno.land/#installation) per eseguire lo script o compilare i sorgenti.
@@ -21,14 +23,6 @@ Oppure compilare in un binario eseguibile (questa funzione è ancora [sperimenta
 Potrebbe essere necessario installare l'eseguibile pupperteer con:
 
     PUPPETEER_PRODUCT=chrome deno run -A --unstable https://deno.land/x/puppeteer@9.0.0/install.ts
-
-## Sviluppo
-
-Per facilitare lo sviluppo è usato [velociraptor](https://github.com/jurassiscripts/velociraptor).
-
-    deno install -qA -n vr https://deno.land/x/velociraptor/cli.ts
-
-Per info sui comandi: `vr`
 
 ## Helper
 
@@ -53,7 +47,6 @@ Environment variables:
 
   POLI_USER  <username>  - Username as env var stored in .bashrc
   POLI_PASS  <password>  - Password as env var stored in .bashrc
-
 ```
 
 ## Author
