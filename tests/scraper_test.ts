@@ -1,4 +1,4 @@
-import { assert } from "testing/asserts.ts";
+import { assert } from "../deps.ts";
 
 const { test } = Deno;
 

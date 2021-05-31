@@ -1,5 +1,4 @@
-import { Command, CompletionsCommand } from "command";
-import { Table } from "table";
+import { Command, CompletionsCommand, Table } from "../deps.ts";
 
 import { header, scrape } from "./scraper.ts";
 import { VERSION } from "./version.ts";

@@ -1,6 +1,4 @@
-import puppeteer from "puppeteer";
-import Kia from "kia";
-import { existsSync } from "fs";
+import { existsSync, Kia, puppeteer } from "../deps.ts";
 
 // deno-fmt-ignore
 const EXAM_URL = "https://didattica.polito.it/pls/portal30/sviluppo.reg_esami.stugoux2";

@@ -75,6 +75,8 @@
   "https://deno.land/std@0.95.0/path/posix.ts": "f56c3c99feb47f30a40ce9d252ef6f00296fa7c0fcb6dd81211bdb3b8b99ca3b",
   "https://deno.land/std@0.95.0/path/separator.ts": "8fdcf289b1b76fd726a508f57d3370ca029ae6976fcde5044007f062e643ff1c",
   "https://deno.land/std@0.95.0/path/win32.ts": "77f7b3604e0de40f3a7c698e8a79e7f601dc187035a1c21cb1e596666ce112f8",
+  "https://deno.land/std@0.95.0/testing/_diff.ts": "961eaf6d9f5b0a8556c9d835bbc6fa74f5addd7d3b02728ba7936ff93364f7a3",
+  "https://deno.land/std@0.95.0/testing/asserts.ts": "06ca5f20da42af5960bab649010b6e3e3e476f695223bffe11ce7ae80365b262",
   "https://deno.land/x/cache@0.2.12/deps.ts": "f992c28c82770eab287f0ea332eae502e397c78e5f27a0a4512f59dd54dee865",
   "https://deno.land/x/cache@0.2.12/directories.ts": "ef48531cab3f827252e248596d15cede0de179a2fb15392ae24cf8034519994f",
   "https://deno.land/x/cliffy@v0.18.2/_utils/distance.ts": "02af166952c7c358ac83beae397aa2fbca4ad630aecfcd38d92edb1ea429f004",
@@ -295,9 +297,5 @@
   "https://raw.githubusercontent.com/gabelluardo/kia/master/kia.ts": "c601d1f39202c12fafcaff718f3213875e37a4951e75b25409590b148854bb15",
   "https://raw.githubusercontent.com/gabelluardo/kia/master/mod.ts": "998eb740e3e093bdad76e6c8557e8eb034ee4565ca6436c0c6d18d4bbddeb670",
   "https://raw.githubusercontent.com/gabelluardo/kia/master/spinners.ts": "9a4441c1dc63f1349f302218d1197a603549abc6bd91ee80afbb63a9759511a3",
-  "https://raw.githubusercontent.com/gabelluardo/kia/master/util.ts": "4240c88fbb1dc112ab8e5d8e9c4667321d651e25ccf4034a1aebc79ea8452d6d",
-  "https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts": "d23ecc3a0b418719e952f0586d33f46e91cb96162f25ccfda987d8a40bbf353b",
-  "https://raw.githubusercontent.com/gabelluardo/poliappelli/main/src/main.ts": "c5897ad1f5c444618b880e6b0d3f2c81ab5061ca04190901cca6df6a5d09317a",
-  "https://raw.githubusercontent.com/gabelluardo/poliappelli/main/src/scraper.ts": "73414e991a01e9d4d3079c14ad5b83f8fc1e097b12dc927c4220c61f6c041f59",
-  "https://raw.githubusercontent.com/gabelluardo/poliappelli/main/src/version.ts": "655f09054c579267c5836e266dea5fc64b6d6c237c77421767d6f47f931059b1"
+  "https://raw.githubusercontent.com/gabelluardo/kia/master/util.ts": "4240c88fbb1dc112ab8e5d8e9c4667321d651e25ccf4034a1aebc79ea8452d6d"
 }

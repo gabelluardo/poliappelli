@@ -7,8 +7,6 @@ allow:
   - run
   - net
 
-imap: import_map.json
-
 scripts:
   dev:
     desc: Runs the script for development
@@ -25,15 +23,21 @@ scripts:
     cmd: deno test
     noCheck: true
 
+  install:
+    desc: Install script
+    cmd: deno install -f cli.ts
+    lock: lock.json
+    noCheck: true
+
   compile:
     desc: Compile the script
-    cmd: deno compile --unstable -A --import-map=import_map.json cli.ts
+    cmd: deno compile --unstable -A cli.ts
     lock: lock.json
     noCheck: true
 
   compile_win:
     desc: Compile the script
-    cmd: deno compile --unstable --target x86_64-pc-windows-msvc -A --import-map=import_map.json cli.ts
+    cmd: deno compile --unstable --target x86_64-pc-windows-msvc -A cli.ts
     lock: lock.json
     noCheck: true
 
