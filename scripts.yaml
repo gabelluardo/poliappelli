@@ -7,15 +7,17 @@ allow:
   - run
   - net
 
+lock: lock.json
+
 scripts:
   dev:
     desc: Runs the script for development
     cmd: cli.ts
+    lock: false
 
   start:
     desc: Runs the script
     cmd: cli.ts
-    lock: lock.json
     noCheck: true
 
   test:
@@ -25,23 +27,21 @@ scripts:
 
   install:
     desc: Install script
-    cmd: deno install -f cli.ts
-    lock: lock.json
+    cmd: deno install -fn cli.ts
     noCheck: true
 
+  # Native compilation
   compile:
     desc: Compile the script
     cmd: deno compile --unstable -A cli.ts
-    lock: lock.json
     noCheck: true
 
+  # Cross compilation from a linux/macOS machine to win
   compile_win:
-    desc: Compile the script
+    desc: Compile the script for Windows
     cmd: deno compile --unstable --target x86_64-pc-windows-msvc -A cli.ts
-    lock: lock.json
     noCheck: true
 
   update:
     desc: Create/update lock.json file
-    cmd: deno cache --reload --lock-write cli.ts
-    lock: lock.json
+    cmd: deno cache --reload --lock-write deps.ts

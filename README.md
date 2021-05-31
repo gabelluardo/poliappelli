@@ -10,15 +10,15 @@ Necessario installare [deno](https://deno.land/#installation) per eseguire lo sc
 
 Eseguire lo script con:
 
-    deno run -A --unstable --lock=lock.json -fn poliappelli https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
+    deno run -A --unstable https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
 
 Oppure installare come script deno:
 
-    deno install -A --unstable --lock=lock.json -fn poliappelli https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
+    deno install -A --unstable -fn poliappelli https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
 
 Oppure compilare in un binario eseguibile (questa funzione è ancora [sperimentale](https://deno.land/manual/tools/compiler)):
 
-    deno compile -A --unstable --lock=lock.json -o poliappelli https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
+    deno compile -A --unstable -o poliappelli https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
 
 Potrebbe essere necessario installare l'eseguibile pupperteer con:
 
