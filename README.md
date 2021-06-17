@@ -14,7 +14,7 @@ Eseguire lo script con:
 
 Oppure installare come script deno:
 
-    deno install -A --unstable -fn poliappelli https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
+    deno install -A --unstable -qfn poliappelli https://raw.githubusercontent.com/gabelluardo/poliappelli/main/cli.ts
 
 Oppure compilare in un binario eseguibile (questa funzione è ancora [sperimentale](https://deno.land/manual/tools/compiler)):
 

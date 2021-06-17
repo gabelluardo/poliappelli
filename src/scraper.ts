@@ -29,7 +29,7 @@ interface Exam {
 
 class Exam {
   constructor(str: string[]) {
-    this.raw = str.filter((e) => e.length);
+    this.raw = str.filter((e) => e);
 
     [
       this.codice,
@@ -59,17 +59,19 @@ class Exam {
 }
 
 function purgeData(str: string): Exam[] {
-  const rawData = str.split(",").filter((s) => s != "");
-  const data = new Array(Math.ceil(rawData.length / 8))
+  const rawData = str.split(",").map((s) => s.trim());
+  const data = new Array(Math.ceil(rawData.length / 9))
     .fill([])
-    .map((_) => rawData.splice(0, 8))
+    .map((_) => rawData.splice(0, 9))
     .map((e) => Exam.from(e));
 
-  const exams = data.map((e, id) => {
-    if (e.codice === "" || e.materia === "") {
-      e.raw = data[id - 1].raw;
-      e.codice = data[id - 1].codice;
-      e.materia = data[id - 1].materia;
+  const exams = data.map((e) => {
+    if (!e.codice || !e.materia) {
+      const ex = data.find((ex) => ex.insegnante === e.insegnante);
+
+      e.codice = ex?.codice || "";
+      e.materia = ex?.materia || "";
+      e.raw = [e.codice, e.materia, ...e.raw];
     }
     return e;
   });
@@ -114,7 +116,7 @@ export async function scrape(user: string, pass: string) {
 
   const data = await page.$$eval<string[]>(
     "tbody > tr > td",
-    (tds) => tds.map((td) => td.innerText.trim()),
+    (tds) => tds.map((td) => td.innerText).filter((s) => s),
   );
   await browser.close();
 
